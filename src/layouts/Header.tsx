@@ -16,7 +16,7 @@ export default function Header() {
             transition: {
                 duration: 0.3,
                 ease: "easeInOut",
-                staggerChildren: 0.2, 
+                staggerChildren: 0.2,
             },
         },
     };
@@ -28,7 +28,13 @@ export default function Header() {
 
     return (
         <div className="w-full h-24 shadow-2xs flex justify-between">
-            <img draggable={false} className="h-24 w-48 object-cover" src="https://media.istockphoto.com/id/1420172793/vector/connection-logo-business-global-technology-and-network.jpg?s=612x612&w=0&k=20&c=PSDmuJrOSV9k_GxXtvu8jKHLijvsCT9P9iTGXysPPY4=" alt="hero.png" />
+            <div className="h-full text-[#06BBCC] px-4 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="black">
+                    <path d="M448 360V80c0-26.5-21.5-48-48-48H128c-35.3 0-64 28.7-64 64V416c0 35.3 28.7 64 64 64H400c26.5 0 48-21.5 48-48v-16c-13.3 0-24-10.7-24-24s10.7-24 24-24zM96 64c0-17.7 14.3-32 32-32h272c8.8 0 16 7.2 16 16v320c-8.8 0-16 7.2-16 16v16H128c-17.7 0-32-14.3-32-32V64z" />
+                </svg>
+
+                <p className="font-semibold text-4xl">eLEARNING</p>
+            </div>
 
             <div className="h-full items-center flex">
                 <ul className="flex h-full items-center font-medium uppercase">

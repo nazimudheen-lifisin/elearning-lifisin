@@ -366,7 +366,7 @@ export default function Register() {
                     )
                 }
 
-                <div onClick={handleSubmit(onSubmit)} className='lg:w-[50%] transition-transform transform hover:scale-105 text-white bg-[#11BECE] mx-auto rounded-4xl mb-auto py-2 flex items-center justify-center'>
+                <div onClick={handleSubmit(onSubmit)} className='lg:w-[50%] transition-transform mt-6 transform hover:scale-105 text-white bg-[#11BECE] mx-auto rounded-4xl mb-auto py-2 flex items-center justify-center'>
                     <p className='font-bold text-center uppercase m-0'>
                         Submit
                     </p>

@@ -16,6 +16,10 @@
     display: none;
 }
 
+html {
+    scroll-behavior: smooth;
+  }
+
 body {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE/Edge */

@@ -9,7 +9,7 @@ import GridTwo from '../assets/cat-2.jpg'
 import GridThree from '../assets/cat-3.jpg'
 import GridFour from '../assets/cat-4.jpg'
 import { useNavigate } from "react-router-dom";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import CourseOne from '../assets/course-1.jpg'
 import CourseTwo from '../assets/course-2.jpg'
 import CourseThree from '../assets/course-3.jpg'
@@ -24,8 +24,13 @@ import InstructorFour from '../assets/team-4.jpg'
 
 export default function Home() {
 
+
     const navigation = useNavigate();
+
+    const [activeIndex, setActiveIndex] = useState(0);
     const carouselRef = useRef(null);
+    const studentsRef = useRef(null);
+
 
     const navToLogin = useCallback(() => {
         navigation('/login')
@@ -36,6 +41,11 @@ export default function Home() {
         if (carouselRef.current) {
             carouselRef.current.onClickNext();
         }
+    };
+
+    const handleOnChange = (index, change = false) => {
+        setActiveIndex(index);
+        if (change) studentsRef.current.moveTo(index)
     };
 
     const handlePrev = () => {
@@ -99,6 +109,8 @@ export default function Home() {
 
     }]
 
+    console.log({ activeIndex })
+
     return (
         <div>
             <Header />
@@ -112,6 +124,7 @@ export default function Home() {
                     emulateTouch={true}
                     showArrows={false}
                     swipeable={true}
+                    onChange={handleOnChange}
                     stopOnHover={true}
                     dynamicHeight={true}
                     interval={2500}
@@ -360,52 +373,51 @@ export default function Home() {
                 <h2 className="text-center mb-5">Our Students Say!</h2>
 
                 <div className="relative w-11/12 mx-auto">
-                    <Carousel
-                        showThumbs={false}
-                        showStatus={false}
-                        showIndicators={false}
-                        infiniteLoop={true}
-                        centerMode={true}
-                        interval={2000}
-                        autoPlay
-                        showArrows={false}
-                        centerSlidePercentage={33.3}
-                        dynamicHeight={false}
-                        emulateTouch={true}
-                    >
-                        <div className="relative bg-white rounded-lg shadow-lg w-full mx-4">  {/* Added mx-4 here */}
-                            <div className="flex flex-col justify-center items-center overflow-hidden">
-                                <img src={CarouselOne} alt="image.png" className="h-16 max-w-16 object-cover rounded-full" />
-                                <h1>Joseph</h1>
-                                <p>Profession</p>
-                                <div className="bg-[#32a8a2] py-2 px-2">
-                                    <p className="text-[#fff]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus ab facilis eos! Soluta corrupti inventore quos dolorum quam nemo praesentium voluptas aliquam, fugiat,</p>
-                                </div>
-                            </div>
-                        </div>
+                    <div>
+                        <Carousel
+                            showThumbs={false}
+                            showStatus={false}
+                            showIndicators={false}
+                            infiniteLoop={true}
+                            centerMode={true}
+                            ref={studentsRef}
+                            interval={1500}
+                            onChange={handleOnChange}
+                            autoPlay
+                            showArrows={false}
+                            centerSlidePercentage={33.3}
+                            dynamicHeight={false}
+                            emulateTouch={true}
+                        >
+                            {
+                                Array.from('123', (_, i) => (
+                                    <div className="relative bg-white rounded-lg shadow-lg ml-4">
+                                        <div className="flex flex-col justify-center items-center overflow-hidden">
+                                            <img src={CarouselOne} alt="image.png" className="h-16 max-w-16 object-cover rounded-full" />
+                                            <h1>{i === 0 ? 'nazim' : i === 1 ? 'Shazam' : 'Noma'}</h1>
+                                            <p>Profession</p>
+                                            <div className={`${i === activeIndex ? 'bg-[#32a8a2] text-[#fff]' : 'bg-white text-[#000]'} py-2 px-2`}>
+                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus ab facilis eos! Soluta corrupti inventore quos dolorum quam nemo praesentium voluptas aliquam, fugiat,</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </Carousel>
 
-                        <div className="relative w-full bg-white rounded-lg shadow-lg mx-4">  {/* Added mx-4 here */}
-                            <div className="flex flex-col justify-center items-center overflow-hidden">
-                                <img src={CarouselOne} alt="image.png" className="h-16 max-w-16 object-cover rounded-full" />
-                                <h1>King Lee</h1>
-                                <p>Profession</p>
-                                <div className="bg-[#32a8a2] py-2 px-2">
-                                    <p className="text-[#fff]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus ab facilis eos! Soluta corrupti inventore quos dolorum quam nemo praesentium voluptas aliquam, fugiat,</p>
-                                </div>
-                            </div>
+                        {/* Custom Pagination Dots */}
+                        <div className="flex justify-center mt-4">
+                            {[0, 1, 2].map((index) => (
+                                <div
+                                    key={index}
+                                    onClick={() => handleOnChange(index, true)}
+                                    className={`w-4 h-4 mx-2 cursor-pointer transition-all duration-300 ${activeIndex === index ? 'bg-[#32a8a2]' : 'bg-white border-[1px] border-gray-500'}
+                                        }`}
+                                ></div>
+                            ))}
                         </div>
+                    </div>
 
-                        <div className="relative w-full bg-white rounded-lg shadow-lg mx-4">  {/* Added mx-4 here */}
-                            <div className="flex flex-col justify-center items-center overflow-hidden">
-                                <img src={CarouselOne} alt="image.png" className="h-16 max-w-16 object-cover rounded-full" />
-                                <h1>Nazim</h1>
-                                <p>Profession</p>
-                                <div className="bg-[#32a8a2] py-2 px-2">
-                                    <p className="text-[#fff]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus ab facilis eos! Soluta corrupti inventore quos dolorum quam nemo praesentium voluptas aliquam, fugiat,</p>
-                                </div>
-                            </div>
-                        </div>
-                    </Carousel>
                 </div>
 
 

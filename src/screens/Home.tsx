@@ -9,7 +9,7 @@ import GridTwo from '../assets/cat-2.jpg'
 import GridThree from '../assets/cat-3.jpg'
 import GridFour from '../assets/cat-4.jpg'
 import { useNavigate } from "react-router-dom";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CourseOne from '../assets/course-1.jpg'
 import CourseTwo from '../assets/course-2.jpg'
 import CourseThree from '../assets/course-3.jpg'
@@ -17,7 +17,7 @@ import InstructorOne from '../assets/team-1.jpg'
 import InstructorTwo from '../assets/team-2.jpg'
 import InstructorThree from '../assets/team-3.jpg'
 import InstructorFour from '../assets/team-4.jpg'
-
+import useWindow from "../hooks/useWindow";
 
 
 
@@ -32,9 +32,12 @@ export default function Home() {
     const studentsRef = useRef(null);
 
 
+    const windowHeight = useWindow()
+
     const navToLogin = useCallback(() => {
         navigation('/login')
     }, [])
+
 
     const handleNext = () => {
         console.log(carouselRef.current)
@@ -109,12 +112,11 @@ export default function Home() {
 
     }]
 
-    console.log({ activeIndex })
 
     return (
         <div>
             <Header />
-            <div className="h-screen w-full flex items-center justify-center bg-gray-800">
+            <div className="h-screen flex items-center justify-center bg-gray-800">
                 <Carousel
                     ref={carouselRef}
                     showThumbs={false}
@@ -134,13 +136,13 @@ export default function Home() {
                 >
                     {
                         ["the best online platform learning", 'get educated online from your home']?.map((item, i) => (
-                            <div className="h-[100vh] w-full">
+                            <div className={`h-[100vh] w-full`} id="animated-div">
                                 <img src={i == 0 ? CarouselOne : CarouselTwo} className="h-full object-cover" alt="Slide 1" />
 
                                 <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col mx-auto justify-center">
                                     <div className="flex pl-[10%] w-5/8 justify-between">
                                         <div className="flex-3 flex flex-col items-start">
-                                            <p className="font-semibold text-[#06BBCC] uppercase text-xl">Best online courses</p>
+                                            <p className={`font-semibold text-[#06BBCC] uppercase text-xl`}>Best online courses</p>
                                             <p className="text-white text-left text-5xl font-extrabold capitalize">{item}</p>
 
                                             <span className="text-start text-white font-semibold text-xl">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam ut doloribus laboriosam quidem similique,</span>
@@ -176,7 +178,7 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="w-full flex gap-4 px-16 py-16">
+            <div className="w-full max-w-[1229px] mx-auto flex gap-4 px-16 py-16">
                 {
                     cardItems.map(({ title, icon }) => (
                         <Card title={title} icon={icon} />
@@ -185,9 +187,9 @@ export default function Home() {
             </div>
 
             {/* About us */}
-            <div className="w-full flex px-16 py-16 gap-6">
+            <div className="w-full flex px-16 max-w-[1229px] mx-auto py-16 gap-6">
                 <div className="flex-1">
-                    <img src={AboutImg} alt="image.png" className="h-full object-cover" />
+                    <img src={AboutImg} alt="image.png" className="h-full max-h-100 w-100 object-cover" />
                 </div>
 
                 <div className="flex-1">
@@ -255,7 +257,7 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="w-full flex flex-col px-16 py-16">
+            <div className="w-full flex flex-col max-w-[1229px] mx-auto px-16 py-16">
                 <div className="flex justify-center items-center gap-2">
                     <div>
                         <div className="w-8 h-[2px] bg-[#06BBCC] mb-1 ml-auto" />
@@ -269,7 +271,7 @@ export default function Home() {
                 </div>
                 <h2 className="text-center mb-5">Courses Categories</h2>
 
-                <div className="grid grid-cols-7 grid-rows-2 gap-4 h-[500px]">
+                <div className="grid grid-cols-7 grid-rows-2 gap-2 h-[500px]">
                     <div className="relative group col-span-4 h-full overflow-hidden cursor-pointer">
                         <img src={GridOne} alt="image.png" className="w-full h-full transition-transform duration-300  group-hover:scale-110 object-cover" />
                         <div className="absolute inset-0 bg-black opacity-20 transition-opacity duration-300"></div>
@@ -297,7 +299,7 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className="relative group col-span-2 row-span-2 h-full overflow-hidden cursor-pointer">
+                    <div className="relative group col-span-2 h-full overflow-hidden cursor-pointer">
                         <img src={GridTwo} alt="image.png" className="w-full h-full transition-transform duration-300  group-hover:scale-110 object-cover" />
                         <div className="absolute inset-0 bg-black opacity-20 transition-opacity duration-300"></div>
                         <div className="bg-white bottom-[1px] right-[1px] absolute flex flex-col items-center z-10 py-2 px-4">
@@ -309,7 +311,7 @@ export default function Home() {
 
             </div>
 
-            <div className="w-full flex flex-col px-16 py-16">
+            <div className="w-full flex flex-col max-w-[1229px] mx-auto px-16 py-16">
                 <div className="flex justify-center items-center gap-2">
                     <div>
                         <div className="w-8 h-[2px] bg-[#06BBCC] mb-1 ml-auto" />
@@ -333,7 +335,7 @@ export default function Home() {
 
             </div>
 
-            <div className="w-full flex flex-col px-16 py-16">
+            <div className="w-full flex flex-col max-w-[1229px] mx-auto px-16 py-16">
                 <div className="flex justify-center items-center gap-2">
                     <div>
                         <div className="w-8 h-[2px] bg-[#06BBCC] mb-1 ml-auto" />
@@ -358,7 +360,7 @@ export default function Home() {
             </div>
 
             {/* say */}
-            <div className="w-full flex flex-col px-16 py-16">
+            <div className="w-full flex flex-col max-w-[1229px] mx-auto px-16 py-16">
                 <div className="flex justify-center items-center gap-2">
                     <div>
                         <div className="w-8 h-[2px] bg-[#06BBCC] mb-1 ml-auto" />
@@ -373,19 +375,19 @@ export default function Home() {
                 <h2 className="text-center mb-5">Our Students Say!</h2>
 
                 <div className="relative w-11/12 mx-auto">
-                    <div>
+                    <div className="relative">
                         <Carousel
                             showThumbs={false}
                             showStatus={false}
                             showIndicators={false}
-                            infiniteLoop={true}
+                            infiniteLoop
                             centerMode={true}
                             ref={studentsRef}
                             interval={1500}
                             onChange={handleOnChange}
                             autoPlay
                             showArrows={false}
-                            centerSlidePercentage={33.3}
+                            centerSlidePercentage={33.33}
                             dynamicHeight={false}
                             emulateTouch={true}
                         >
@@ -411,12 +413,15 @@ export default function Home() {
                                 <div
                                     key={index}
                                     onClick={() => handleOnChange(index, true)}
-                                    className={`w-4 h-4 mx-2 cursor-pointer transition-all duration-300 ${activeIndex === index ? 'bg-[#32a8a2]' : 'bg-white border-[1px] border-gray-500'}
-                                        }`}
+                                    className={`w-4 h-4 mx-2 cursor-pointer transition-all duration-300 ${activeIndex === index ? 'bg-[#32a8a2]' : 'bg-white border-[1px] border-gray-500'}`}
                                 ></div>
                             ))}
                         </div>
+
+                        <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-l from-white to-transparent z-10"></div>
+                        <div className="absolute top-0 left-0 w-24 h-full bg-gradient-to-r from-white to-transparent z-10"></div>
                     </div>
+
 
                 </div>
 
@@ -424,7 +429,7 @@ export default function Home() {
             </div>
 
             <footer className="bg-[#181D38] text-white py-8">
-                <div className="max-w-[1238px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="max-w-[1229px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Quick Links Section */}
                     <div>
                         <h3 className="font-semibold text-lg mb-4">Quick Link</h3>
@@ -535,6 +540,36 @@ export default function Home() {
                                 </span>
                             </li>
                         </ul>
+
+                        <div className="flex mt-3 gap-2">
+                            <div className="group relative flex items-center justify-center w-10 h-10 rounded-full border-2 border-white transition-all duration-300 hover:bg-white">
+                                <svg fill="#000000" className="fill-white group-hover:fill-[#06BBCC] grid place-content-center mr-2 transition-colors duration-300" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    viewBox="0 0 24 24" xml:space="preserve">
+                                    <path d="M19.8,5.4h-2c-1.3,0-1.4,0.4-1.4,1.4v1.9h3L19.3,12h-2.7v10H12V12h-1.7V8.6H12V6.4C12,3.6,13.1,2,16.4,2h3.4V5.4z" />
+                                </svg>
+                            </div>
+
+                            <div className="group relative flex items-center justify-center w-10 h-10 rounded-full border-2 border-white transition-all duration-300 hover:bg-white">
+                                <svg className="fill-white group-hover:fill-[#06BBCC] transition-colors duration-300" width="28px" height="28px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11.919 24.94c-2.548 0-4.921-.747-6.919-2.032a9.049 9.049 0 0 0 6.681-1.867 4.512 4.512 0 0 1-4.215-3.137c.276.054.559.082.848.082.412 0 .812-.056 1.193-.156a4.519 4.519 0 0 1-3.622-4.425v-.059a4.478 4.478 0 0 0 2.042.564 4.507 4.507 0 0 1-2.008-3.758c0-.824.225-1.602.612-2.268a12.811 12.811 0 0 0 9.303 4.715 4.517 4.517 0 0 1 7.692-4.115 9.107 9.107 0 0 0 2.866-1.094 4.542 4.542 0 0 1-1.983 2.498 9.08 9.08 0 0 0 2.592-.71 9.283 9.283 0 0 1-2.252 2.337c.008.193.014.388.014.583-.001 5.962-4.542 12.843-12.844 12.842" />
+                                </svg>
+                            </div>
+
+                            <div className="group relative flex items-center justify-center w-10 h-10 rounded-full border-2 border-white transition-all duration-300 hover:bg-white">
+                                <svg className="fill-white group-hover:fill-[#06BBCC] transition-colors duration-300" width="28px" height="28px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M20.445 5h-8.891A6.559 6.559 0 0 0 5 11.554v8.891A6.559 6.559 0 0 0 11.554 27h8.891a6.56 6.56 0 0 0 6.554-6.555v-8.891A6.557 6.557 0 0 0 20.445 5zm4.342 15.445a4.343 4.343 0 0 1-4.342 4.342h-8.891a4.341 4.341 0 0 1-4.341-4.342v-8.891a4.34 4.34 0 0 1 4.341-4.341h8.891a4.342 4.342 0 0 1 4.341 4.341l.001 8.891z" />
+                                    <path d="M16 10.312c-3.138 0-5.688 2.551-5.688 5.688s2.551 5.688 5.688 5.688 5.688-2.551 5.688-5.688-2.55-5.688-5.688-5.688zm0 9.163a3.475 3.475 0 1 1-.001-6.95 3.475 3.475 0 0 1 .001 6.95zM21.7 8.991a1.363 1.363 0 1 1-1.364 1.364c0-.752.51-1.364 1.364-1.364z" />
+                                </svg>
+                            </div>
+
+                            <div className="group relative flex items-center justify-center w-10 h-10 rounded-full border-2 border-white transition-all duration-300 hover:bg-white">
+                                <svg className="fill-white group-hover:fill-[#06BBCC] transition-colors duration-300" height="24px" width="24px" viewBox="-271 311.2 256 179.8" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M-59.1,311.2h-167.8c0,0-44.1,0-44.1,44.1v91.5c0,0,0,44.1,44.1,44.1h167.8c0,0,44.1,0,44.1-44.1v-91.5
+	C-15,355.3-15,311.2-59.1,311.2z M-177.1,450.3v-98.5l83.8,49.3L-177.1,450.3z"/>
+                                </svg>
+                            </div>
+                        </div>
+
                     </div>
 
                     {/* Gallery Section */}
@@ -589,11 +624,23 @@ export default function Home() {
                 <span className="block text-center text-xs">&copy; Lifisin Technologies, All right reservered</span>
             </footer>
 
-            <div className="cursor-pointer h-16 w-16 bg-[#32a8a6] justify-center flex items-center fixed bottom-8 right-8">
-                <svg width="38px" height="38px" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 3C12.2652 3 12.5196 3.10536 12.7071 3.29289L19.7071 10.2929C20.0976 10.6834 20.0976 11.3166 19.7071 11.7071C19.3166 12.0976 18.6834 12.0976 18.2929 11.7071L13 6.41421V20C13 20.5523 12.5523 21 12 21C11.4477 21 11 20.5523 11 20V6.41421L5.70711 11.7071C5.31658 12.0976 4.68342 12.0976 4.29289 11.7071C3.90237 11.3166 3.90237 10.6834 4.29289 10.2929L11.2929 3.29289C11.4804 3.10536 11.7348 3 12 3Z" fill="#fff" />
-                </svg>
-            </div>
+            {
+                windowHeight > (document.documentElement.scrollHeight / 3) && (
+                    <div className="h-12 w-12 bg-[#33A6B0] flex items-center justify-center z-20 fixed bottom-8 right-8" onClick={() => document.documentElement.scrollTo({ top: 0, behavior: "smooth" })}>
+                        <svg width="28px" height="28px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <title />
+                            <g id="Complete">
+                                <g id="arrow-up">
+                                    <g>
+                                        <polyline data-name="Right" fill="none" id="Right-2" points="7 7.5 12 2.5 17 7.5" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                                        <line fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12" x2="12" y1="21.3" y2="4.8" />
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                )
+            }
 
         </div>
     )
@@ -609,40 +656,41 @@ const Card = ({ icon, title }) => (
 )
 
 const CourseCard = ({ img }) => (
-    <div className="bg-[#F0FBFC] h-96 w-1/3">
+    <div className="bg-[#F0FBFC] h-auto w-1/3">
         <div className="h-1/2 group overflow-hidden relative">
             <div className="flex rounded-2xl overflow-hidden bg-[#44CCD9]  absolute bottom-2 left-1/2 transform -translate-x-1/2 z-20">
                 <div className="border-r-[1px] border-r-white flex justify-center items-center cursor-pointer">
-                    <span className="text-center whitespace-nowrap py-2 px-3 font-medium text-white text-md">
+                    <span className="text-center whitespace-nowrap py-1 px-3 font-normal text-white text-md ">
                         Read More
                     </span>
                 </div>
 
-                <div className="p-2 px-8 whitespace-nowrap cursor-pointer">
-                    <p className="mb-0 pb-0 text-center text-white font-medium text-md">Join Now</p>
+                <div className="p-1 px-8 whitespace-nowrap cursor-pointer">
+                    <p className="mb-0 pb-0 text-center text-white font-normal text-md pr-4 pl-2">Join Now</p>
                 </div>
             </div>
-            <img src={img} className="h-full w-full group-hover:scale-110 transition-transform duration-300 object-cover" alt="image.png" />
+            <img src={img} className="h-full w-full group-hover:scale-110 transition-transform duration-300 object-fill" alt="image.png" />
         </div>
 
 
-        <div className="p-2 h-1/2">
+        <div className="p-2 h-1/2 flex flex-col justify-between">
             <h3 className="text-center text-lg">$159.00</h3>
-            <div className="flex items-center justify-center my-2">
+            <div className="flex justify-center items-center my-2">
                 {
                     Array(5).fill(null)?.map(() => (
-                        <svg width="12px" height="12px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9.15316 5.40838C10.4198 3.13613 11.0531 2 12 2C12.9469 2 13.5802 3.13612 14.8468 5.40837L15.1745 5.99623C15.5345 6.64193 15.7144 6.96479 15.9951 7.17781C16.2757 7.39083 16.6251 7.4699 17.3241 7.62805L17.9605 7.77203C20.4201 8.32856 21.65 8.60682 21.9426 9.54773C22.2352 10.4886 21.3968 11.4691 19.7199 13.4299L19.2861 13.9372C18.8096 14.4944 18.5713 14.773 18.4641 15.1177C18.357 15.4624 18.393 15.8341 18.465 16.5776L18.5306 17.2544C18.7841 19.8706 18.9109 21.1787 18.1449 21.7602C17.3788 22.3417 16.2273 21.8115 13.9243 20.7512L13.3285 20.4768C12.6741 20.1755 12.3469 20.0248 12 20.0248C11.6531 20.0248 11.3259 20.1755 10.6715 20.4768L10.0757 20.7512C7.77268 21.8115 6.62118 22.3417 5.85515 21.7602C5.08912 21.1787 5.21588 19.8706 5.4694 17.2544L5.53498 16.5776C5.60703 15.8341 5.64305 15.4624 5.53586 15.1177C5.42868 14.773 5.19043 14.4944 4.71392 13.9372L4.2801 13.4299C2.60325 11.4691 1.76482 10.4886 2.05742 9.54773C2.35002 8.60682 3.57986 8.32856 6.03954 7.77203L6.67589 7.62805C7.37485 7.4699 7.72433 7.39083 8.00494 7.17781C8.28555 6.96479 8.46553 6.64194 8.82547 5.99623L9.15316 5.40838Z" fill="#1C274C" />
+                        <svg width="15px" height="15px" viewBox="0 0 24 24" fill="#06BBCC" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.15316 5.40838C10.4198 3.13613 11.0531 2 12 2C12.9469 2 13.5802 3.13612 14.8468 5.40837L15.1745 5.99623C15.5345 6.64193 15.7144 6.96479 15.9951 7.17781C16.2757 7.39083 16.6251 7.4699 17.3241 7.62805L17.9605 7.77203C20.4201 8.32856 21.65 8.60682 21.9426 9.54773C22.2352 10.4886 21.3968 11.4691 19.7199 13.4299L19.2861 13.9372C18.8096 14.4944 18.5713 14.773 18.4641 15.1177C18.357 15.4624 18.393 15.8341 18.465 16.5776L18.5306 17.2544C18.7841 19.8706 18.9109 21.1787 18.1449 21.7602C17.3788 22.3417 16.2273 21.8115 13.9243 20.7512L13.3285 20.4768C12.6741 20.1755 12.3469 20.0248 12 20.0248C11.6531 20.0248 11.3259 20.1755 10.6715 20.4768L10.0757 20.7512C7.77268 21.8115 6.62118 22.3417 5.85515 21.7602C5.08912 21.1787 5.21588 19.8706 5.4694 17.2544L5.53498 16.5776C5.60703 15.8341 5.64305 15.4624 5.53586 15.1177C5.42868 14.773 5.19043 14.4944 4.71392 13.9372L4.2801 13.4299C2.60325 11.4691 1.76482 10.4886 2.05742 9.54773C2.35002 8.60682 3.57986 8.32856 6.03954 7.77203L6.67589 7.62805C7.37485 7.4699 7.72433 7.39083 8.00494 7.17781C8.28555 6.96479 8.46553 6.64194 8.82547 5.99623L9.15316 5.40838Z" />
                         </svg>
                     ))
                 }
 
                 <span className="text-sm ml-1 text-gray-500"> (120)</span>
             </div>
+
             <p className="font-bold text-center">Web Design & Development Couse for Beginners</p>
 
-            <div className="flex justify-between border-t-1  border-t-gray-200">
-                <div className="flex gap-1 items-center border-r-1 w-1/3 border-r-gray-200 h-full justify-center py-1">
+            <div className="flex justify-between border-t-1 border-t-gray-200 mt-auto">
+                <div className="flex gap-1 items-center border-r-1 w-1/3 border-r-gray-200 justify-center py-1">
                     <svg fill="#44CCD9" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                         width="15px" height="15px" viewBox="0 0 45.985 45.985"
                         xml:space="preserve">
@@ -694,8 +742,8 @@ const CourseCard = ({ img }) => (
 
 const InstructorCard = ({ img }) => (
     <div className="bg-[#F0FBFC] h-96 w-1/4 group">
-        <div className="h-1/2 overflow-hidden relative">
-            <img src={img} className="h-full w-full group-hover:scale-110 transition-transform duration-300 object-cover" alt="image.png" />
+        <div className="h-2/3 overflow-hidden relative">
+            <img src={img} className="h-full w-full group-hover:scale-110 transition-transform duration-300 object-fill" alt="image.png" />
         </div>
 
         <div className="p-2 h-1/2 relative z-0">
@@ -714,9 +762,9 @@ const InstructorCard = ({ img }) => (
                     <svg width="18px" height="18px" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" fill="none"><path stroke="#fff" stroke-width="12" d="M96 162c-14.152 0-24.336-.007-32.276-.777-7.849-.761-12.87-2.223-16.877-4.741a36 36 0 0 1-11.33-11.329c-2.517-4.007-3.98-9.028-4.74-16.877C30.007 120.336 30 110.152 30 96c0-14.152.007-24.336.777-32.276.76-7.849 2.223-12.87 4.74-16.877a36 36 0 0 1 11.33-11.33c4.007-2.517 9.028-3.98 16.877-4.74C71.663 30.007 81.847 30 96 30c14.152 0 24.336.007 32.276.777 7.849.76 12.87 2.223 16.877 4.74a36 36 0 0 1 11.329 11.33c2.518 4.007 3.98 9.028 4.741 16.877.77 7.94.777 18.124.777 32.276 0 14.152-.007 24.336-.777 32.276-.761 7.849-2.223 12.87-4.741 16.877a36 36 0 0 1-11.329 11.329c-4.007 2.518-9.028 3.98-16.877 4.741-7.94.77-18.124.777-32.276.777Z" /><circle cx="96" cy="96" r="30" stroke="#fff" stroke-width="12" /><circle cx="135" cy="57" r="9" fill="#fff" /></svg>
                 </div>
             </div>
-            <div className="flex items-center flex-col mt-4">
-                <p className="font-medium text-xl p-0 m-0 mt-4">Instructor Name</p>
-                <p className="text-md text-gray-600 mt-2 p-0 m-0">Designation</p>
+            <div className="flex items-center flex-col mt-2">
+                <p className="font-medium text-xl text-[#18315C] p-0 m-0 mt-4">Instructor Name</p>
+                <p className="text-md text-[#526074] p-0 m-0">Designation</p>
             </div>
         </div>
     </div>

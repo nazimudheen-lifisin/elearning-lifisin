@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 
 
 
-const schema = (type: 'student' | 'mentor') => yup.object({
+const schema = (type) => yup.object({
     username: yup.string().required('Name is required'),
     first_name: yup.string().required('First name is required'),
     last_name: yup.string().required('Last name is required'),

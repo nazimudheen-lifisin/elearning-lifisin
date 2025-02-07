@@ -2,19 +2,19 @@ import { useCallback, useState } from "react"
 import { Controller } from "react-hook-form"
 
 
-type Props = {
-    id: string
-    name: string
-    control: any
-    required?: boolean
-    readOnly?: boolean
-    placeholder?: string
-    type?: string,
-    icon: any,
-    label: string
-}
+// type Props = {
+//     id: string
+//     name: string
+//     control: any
+//     required?: boolean
+//     readOnly?: boolean
+//     placeholder?: string
+//     type?: string,
+//     icon: any,
+//     label: string
+// }
 
-export default function CommonInput({ id, control, name, required, readOnly, placeholder, type = 'text', icon, label }: Props) {
+export default function CommonInput({ id, control, name, required, readOnly, placeholder, type = 'text', icon, label }) {
 
     const [hide, setHide] = useState(!false);
 

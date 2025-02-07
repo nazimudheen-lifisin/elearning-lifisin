@@ -2,17 +2,17 @@ import { useCallback, useState } from "react";
 import { Controller } from "react-hook-form";
 import Select from 'react-select'
 
-interface Props {
-  options: { value: string, label: string }[]
-  name: string
-  control: any
-  multi: boolean
-  placeholder: string
-  defaultValue: { label: string, value: string }
-}
+// interface Props {
+//   options: { value: string, label: string }[]
+//   name: string
+//   control: any
+//   multi: boolean
+//   placeholder: string
+//   defaultValue: { label: string, value: string }
+// }
 
 
-export default function SelectComponent({ name, options, control, multi = false, placeholder, defaultValue }: Props) {
+export default function SelectComponent({ name, options, control, multi = false, placeholder, defaultValue }) {
 
 
   const handleChange = useCallback((selected) => {

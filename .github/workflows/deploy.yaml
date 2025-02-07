@@ -3,7 +3,7 @@ name: Deploy Vite React App to GitHub Pages with CNAME
 on:
   push:
     branches:
-      - deploy  # Trigger when you push to the 'main' branch (adjust if you use a different branch)
+      - deploy  # Trigger when you push to the 'deploy' branch
 
 jobs:
   deploy:
@@ -34,7 +34,7 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          folder: dist  # Vite builds your app in the 'dist' folder by default
+          publish_dir: dist  # Vite builds your app in the 'dist' folder by default
 
           cname: 'nazimudheen.tech'  # Replace with your custom domain
         env:

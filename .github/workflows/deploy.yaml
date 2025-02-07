@@ -38,5 +38,5 @@ jobs:
 
           cname: 'nazimudheen.tech'  # Replace with your custom domain
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
 

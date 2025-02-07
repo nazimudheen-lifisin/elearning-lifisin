@@ -32,7 +32,7 @@ jobs:
 
       # Step 5: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
           publish_dir: dist  # Vite builds your app in the 'dist' folder by default
 

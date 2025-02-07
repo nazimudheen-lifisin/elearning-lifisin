@@ -201,7 +201,7 @@ export default function Home() {
                             <div className="w-12 h-[2px] bg-[#06BBCC]" />
                         </div>
                     </div>
-                    <h2 className="text-3xl font-bold mb-3">Welcome to eLEARNING</h2>
+                    <h2 className="text-3xl font-bold mb-3">Welcome to VirtualTech</h2>
 
                     <p className="text-md text-gray-500 line-clamp-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores sed reiciendis necessitatibus</p>
                     <p className="text-md text-gray-500 line-clamp-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores sed reiciendis necessitatibus consectetur adipisicing elit. Asperiores sed reiciendis necessitatibus</p>

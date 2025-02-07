@@ -5,6 +5,8 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Link } from 'react-router-dom'
 import { useCallback, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { loginApi } from '../api/authApi'
 
 
 
@@ -20,13 +22,22 @@ export default function Login() {
         email: yup.string().email('Type must be email').required('Email is required')
     })
 
+    const { mutate } = useMutation({
+        mutationKey: ['login-api'],
+        mutationFn: loginApi,
+        onError() {},
+        onSuccess() {}
+    })
+
     const { control, reset, handleSubmit } = useForm({
         resolver: yupResolver(schema)
     })
 
     const handleForgot = useCallback(() => {
         setForgot(!forgot)
-    }, [forgot])
+    }, [forgot]);
+
+
 
 
     return (
@@ -83,7 +94,7 @@ export default function Login() {
                                 )
                             }
 
-                            <div onClick={handleSubmit(() => { })} className='w-[80%] text-white bg-[#11BECE] mx-auto rounded-4xl mb-auto py-2 flex items-center justify-center'>
+                            <div onClick={handleSubmit(mutate)} className='w-[80%] text-white bg-[#11BECE] mx-auto rounded-4xl mb-auto py-2 flex items-center justify-center'>
                                 <p className='font-bold text-center uppercase m-0'>
                                     Submit
                                 </p>
@@ -99,7 +110,7 @@ export default function Login() {
                                     <p onClick={handleForgot} className='font-semibold text-blue-400 cursor-pointer'>Sign up</p>
                                 ) : (
                                     <Link to={'/register'}>
-                                    <p className='font-semibold text-blue-400'>{'Sign in'}</p>
+                                    <p className='font-semibold text-blue-400'>{'Sign up'}</p>
                                 </Link>
                                 )
                             }

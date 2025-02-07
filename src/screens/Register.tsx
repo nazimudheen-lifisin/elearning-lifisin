@@ -326,6 +326,7 @@ export default function Register() {
                                     key={'name'}
                                     icon={userIcon}
                                 /> */}
+                                
                                 <SelectComponent
                                     name='skills'
                                     options={skills}

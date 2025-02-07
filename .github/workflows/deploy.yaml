@@ -1,0 +1,40 @@
+name: Deploy Vite React App to GitHub Pages with CNAME
+
+on:
+  push:
+    branches:
+      - master  # Trigger when you push to the 'main' branch (adjust if you use a different branch)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu environment for the job
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js (Vite requires Node.js)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Set the Node.js version that your project uses
+
+      # Step 3: Install dependencies (Vite, React, etc.)
+      - name: Install dependencies
+        run: |
+          npm install
+
+      # Step 4: Build the Vite React app
+      - name: Build Vite app
+        run: |
+          npm run build  # This will build the Vite React app into the 'dist' directory
+
+      # Step 5: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          folder: dist  # Vite builds your app in the 'dist' folder by default
+          cname: 'nazimudheen.tech'  # Replace with your custom domain
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -36,5 +36,4 @@ jobs:
         with:
           publish_dir: dist  # Vite builds your app in the 'dist' folder by default
           cname: 'nazimudheen.tech'  # Replace with your custom domain
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       

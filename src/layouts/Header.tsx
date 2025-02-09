@@ -1,19 +1,29 @@
 
 import { motion } from "framer-motion";
 import { useCallback, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import Logo from '../assets/image.jpeg'
+import { navLinks, pagesDropdown } from "../config/routes";
+import '../index.css'
 
 
 export default function Header() {
 
     const [isOpen, setIsOpen] = useState(false);
-
     const navigation = useNavigate();
     const location = useLocation();
 
+
     const navToLogin = useCallback(() => {
         navigation('/')
+    }, [])
+
+    const onMouseLeave = useCallback(() => {
+        setIsOpen(false)
+    }, [])
+
+    const onMouseEnter = useCallback(() => {
+        setIsOpen(true)
     }, [])
 
 
@@ -44,24 +54,18 @@ export default function Header() {
 
             <div className="items-center flex">
                 <ul className="flex p-0 m-0 items-center font-medium uppercase">
-                    <div className={`flex h-full items-center px-4 hover:text-[#06BBCC] transition py-4 duration-300 delay-300 ${location.pathname === '/' && 'text-[#06BBCC]'}`}>
-                        <li className="text-sm">
-                            Home
-                        </li>
-                    </div>
-                    <div className="h-full flex py-4 items-center px-4 text-sm hover:text-[#06BBCC] transition">
-                        <li className="">
-                            About
-                        </li>
-                    </div>
-                    <div className="hover:text-[#06BBCC] transition py-4 flex items-center px-4 text-sm">
-                        <li className="text-sm">Courses</li>
-                    </div>
-                    <div className="h-full flex  py-4 items-center px-4 group relative" onMouseLeave={() => setIsOpen(false)} onMouseEnter={() => setIsOpen(true)}>
+                    {
+                        navLinks?.map((link) => (
+                            <NavLink to={link.path} key={link.path} className={`text-sm p-4 text-[#000] hover:text-[#06BBCC] transition no-underline`}>
+                                <span className={`${location.pathname === link.path && 'link border-b-2 border-b-[#06BBCC]'}`}>{link.name}</span>
+                            </NavLink>
+                        ))
+                    }
+                    <div className="h-full flex  py-4 items-center px-4 group relative" onMouseLeave={onMouseLeave} onMouseEnter={onMouseEnter}>
                         <li className="flex h-full items-center gap-2 m-0 p-0">
                             <p className="hover:text-[#06BBCC] mb-0 text-sm">Pages</p>
 
-                            <svg class="size-6" className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                            <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                             </svg>
                         </li>
@@ -75,29 +79,18 @@ export default function Header() {
                                 className="absolute left-0 mt-0 top-[100%] flex items-center justify-start z-10  bg-white shadow-lg "
                             >
                                 <motion.ul className="py-2 m-0 p-0 cursor-pointer">
-                                    <motion.li variants={linkVariants}>
-                                        <li className="block px-4 no-underline text-black py-2 hover:bg-gray-200">
-                                            Our Team
-                                        </li>
-                                    </motion.li>
-                                    <motion.li variants={linkVariants}>
-                                        <li className="block px-4 py-2 hover:bg-gray-200">
-                                            Testimonial
-                                        </li>
-                                    </motion.li>
-                                    <motion.li variants={linkVariants}>
-                                        <li className="block px-4 py-2 hover:bg-gray-200">
-                                            404 Page
-                                        </li>
-                                    </motion.li>
+                                    {
+                                        pagesDropdown?.map(item => (
+                                            <motion.li variants={linkVariants}>
+                                                <NavLink to={item.path} className="block px-4 py-2 hover:bg-gray-200">
+                                                    {item.name}
+                                                </NavLink>
+                                            </motion.li>
+                                        ))
+                                    }
                                 </motion.ul>
                             </motion.div>
                         )}
-                    </div>
-                    <div className="flex py-4 items-center px-4 hover:text-[#06BBCC] transition">
-                        <li className="text-sm">
-                            Contact
-                        </li>
                     </div>
 
                     <div

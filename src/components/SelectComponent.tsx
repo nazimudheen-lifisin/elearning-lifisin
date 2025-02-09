@@ -1,11 +1,10 @@
-import { useCallback, useState } from "react";
-import { Controller } from "react-hook-form";
-import Select from 'react-select'
+import { Control, Controller, FieldValues } from "react-hook-form";
+import Select, { SingleValue } from 'react-select'
 
 interface Props {
   options: { value: string, label: string }[]
   name: string
-  control: any
+  control: Control<FieldValues>
   multi: boolean
   placeholder: string
   defaultValue: { label: string, value: string }
@@ -13,18 +12,6 @@ interface Props {
 
 
 export default function SelectComponent({ name, options, control, multi = false, placeholder, defaultValue }: Props) {
-
-
-  const handleChange = useCallback((selected) => {
-
-    const updatedValue = selected ? [...selected] : []
-
-    if (defaultValue && !selected?.find(item => item?.value === defaultValue?.value)) {
-      updatedValue.push(defaultValue)
-    }
-
-    return updatedValue;
-  }, [defaultValue])
 
 
   return (
@@ -38,8 +25,8 @@ export default function SelectComponent({ name, options, control, multi = false,
               options={options}
               placeholder={placeholder}
               onBlur={onBlur}
-              value={multi ? [defaultValue, ...(value || [])] : value}
-              onChange={(selected) => onChange(multi ? handleChange(selected) : selected)}
+              value={multi ? [defaultValue, ...(value || [])?.filter((item: SingleValue<{ value: string, label: string }>) => item?.value !== defaultValue?.value)] : value}
+              onChange={onChange}
               isMulti={multi}
               className={`${error ? 'border-red-300' : 'mb-9'}`}
               styles={{

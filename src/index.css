@@ -30,3 +30,11 @@ body {
 }
 
 
+a {
+    text-decoration: none !important;
+    color: #333 !important;
+}
+
+.link {
+    color: #06BBCC !important;
+}

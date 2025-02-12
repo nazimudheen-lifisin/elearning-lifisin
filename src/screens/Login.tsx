@@ -29,7 +29,7 @@ export default function Login() {
         mutationKey: ['login-api'],
         mutationFn: loginApi,
         onError(error) {
-            toast.error(error)
+            toast.error(error?.message)
         },
         onSuccess() {
             toast.success("Login successfull")

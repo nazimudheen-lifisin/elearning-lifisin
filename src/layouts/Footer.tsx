@@ -1,9 +1,10 @@
-import useWindow from "../hooks/useScroll"
-import CourseOne from '../assets/course-1.jpg'
-import CourseTwo from '../assets/course-2.jpg'
+import CourseOne from '@/assets/course-1.jpg'
+import CourseTwo from '@/assets/course-2.jpg'
+import useWindowScroll from "@/hooks/useScroll"
+import { Link } from 'react-router-dom'
 
 function Footer() {
-    const windowHeight = useWindow()
+    const windowHeight = useWindowScroll()
 
 
     return (
@@ -98,15 +99,15 @@ function Footer() {
                                         </g>
                                     </g>
                                 </svg>
-                                <span>123 Street, New York, USA</span>
+                                <Link to={'https://www.google.com/maps?q=10.070111661724049, 76.33808979965589'} className='text-white'>Aryabhangi Buisness Center, Cochin Pin: 683104</Link>
                             </li>
                             <li className="flex items-center gap-2 text-white">
                                 <svg width="22px" height="22px" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M16.5562 12.9062L16.1007 13.359C16.1007 13.359 15.0181 14.4355 12.0631 11.4972C9.10812 8.55901 10.1907 7.48257 10.1907 7.48257L10.4775 7.19738C11.1841 6.49484 11.2507 5.36691 10.6342 4.54348L9.37326 2.85908C8.61028 1.83992 7.13596 1.70529 6.26145 2.57483L4.69185 4.13552C4.25823 4.56668 3.96765 5.12559 4.00289 5.74561C4.09304 7.33182 4.81071 10.7447 8.81536 14.7266C13.0621 18.9492 17.0468 19.117 18.6763 18.9651C19.1917 18.9171 19.6399 18.6546 20.0011 18.2954L21.4217 16.883C22.3806 15.9295 22.1102 14.2949 20.8833 13.628L18.9728 12.5894C18.1672 12.1515 17.1858 12.2801 16.5562 12.9062Z" />
                                 </svg>
-                                <span>
-                                    +012 345 67890
-                                </span>
+                                <Link to={'tel:+919946785551'} className='text-white'>
+                                    +91 9946785551
+                                </Link>
                             </li>
                             <li className="flex items-center gap-2 text-white">
                                 <svg width="22px" height="22px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -116,19 +117,19 @@ function Footer() {
                                         </g>
                                     </g>
                                 </svg>
-                                <span>
-                                    info@example.com
-                                </span>
+                                <Link to={'mailto:info@virtualtechacademy.com'} className='tracking-wide text-white'>
+                                    info@virtualtechacademy.com
+                                </Link>
                             </li>
                         </ul>
 
                         <div className="flex mt-3 gap-2">
-                            <div className="group relative flex items-center justify-center w-10 h-10 rounded-full border-2 border-white transition-all duration-300 hover:bg-white">
+                            <Link to={'https://www.facebook.com/share/1BDX4RjS76'} className="group relative flex items-center justify-center w-10 h-10 rounded-full border-2 border-white transition-all duration-300 hover:bg-white">
                                 <svg fill="#000000" className="fill-white group-hover:fill-[#06BBCC] grid place-content-center mr-2 transition-colors duration-300" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                     viewBox="0 0 24 24" xml:space="preserve">
                                     <path d="M19.8,5.4h-2c-1.3,0-1.4,0.4-1.4,1.4v1.9h3L19.3,12h-2.7v10H12V12h-1.7V8.6H12V6.4C12,3.6,13.1,2,16.4,2h3.4V5.4z" />
                                 </svg>
-                            </div>
+                            </Link>
 
                             <div className="group relative flex items-center justify-center w-10 h-10 rounded-full border-2 border-white transition-all duration-300 hover:bg-white">
                                 <svg className="fill-white group-hover:fill-[#06BBCC] transition-colors duration-300" width="28px" height="28px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
@@ -136,12 +137,12 @@ function Footer() {
                                 </svg>
                             </div>
 
-                            <div className="group relative flex items-center justify-center w-10 h-10 rounded-full border-2 border-white transition-all duration-300 hover:bg-white">
+                            <Link to={'https://www.instagram.com/virtual_techacademy?igsh=ZWJubmF3eDMxcnJ4'} className="group relative flex items-center justify-center w-10 h-10 rounded-full border-2 border-white transition-all duration-300 hover:bg-white">
                                 <svg className="fill-white group-hover:fill-[#06BBCC] transition-colors duration-300" width="28px" height="28px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M20.445 5h-8.891A6.559 6.559 0 0 0 5 11.554v8.891A6.559 6.559 0 0 0 11.554 27h8.891a6.56 6.56 0 0 0 6.554-6.555v-8.891A6.557 6.557 0 0 0 20.445 5zm4.342 15.445a4.343 4.343 0 0 1-4.342 4.342h-8.891a4.341 4.341 0 0 1-4.341-4.342v-8.891a4.34 4.34 0 0 1 4.341-4.341h8.891a4.342 4.342 0 0 1 4.341 4.341l.001 8.891z" />
                                     <path d="M16 10.312c-3.138 0-5.688 2.551-5.688 5.688s2.551 5.688 5.688 5.688 5.688-2.551 5.688-5.688-2.55-5.688-5.688-5.688zm0 9.163a3.475 3.475 0 1 1-.001-6.95 3.475 3.475 0 0 1 .001 6.95zM21.7 8.991a1.363 1.363 0 1 1-1.364 1.364c0-.752.51-1.364 1.364-1.364z" />
                                 </svg>
-                            </div>
+                            </Link>
 
                             <div className="group relative flex items-center justify-center w-10 h-10 rounded-full border-2 border-white transition-all duration-300 hover:bg-white">
                                 <svg className="fill-white group-hover:fill-[#06BBCC] transition-colors duration-300" height="24px" width="24px" viewBox="-271 311.2 256 179.8" xmlns="http://www.w3.org/2000/svg">

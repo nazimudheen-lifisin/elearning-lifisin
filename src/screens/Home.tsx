@@ -1,23 +1,23 @@
-import Header from "../layouts/Header";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import CarouselOne from '../assets/carousel-1.jpg'
-import AboutImg from '../assets/about.jpg'
-import CarouselTwo from '../assets/carousel-2.jpg'
-import GridOne from '../assets/cat-1.jpg'
-import GridTwo from '../assets/cat-2.jpg'
-import GridThree from '../assets/cat-3.jpg'
-import GridFour from '../assets/cat-4.jpg'
 import { useNavigate } from "react-router-dom";
 import { useCallback, useRef, useState } from "react";
-import CourseOne from '../assets/course-1.jpg'
-import CourseTwo from '../assets/course-2.jpg'
-import CourseThree from '../assets/course-3.jpg'
-import InstructorOne from '../assets/team-1.jpg'
-import InstructorTwo from '../assets/team-2.jpg'
-import InstructorThree from '../assets/team-3.jpg'
-import InstructorFour from '../assets/team-4.jpg'
+import { Carousel } from "react-responsive-carousel";
 
+import CarouselOne from '@/assets/carousel-1.jpg'
+import AboutImg from '@/assets/about.jpg'
+import CarouselTwo from '@/assets/carousel-2.jpg'
+import GridOne from '@/assets/cat-1.jpg'
+import GridTwo from '@/assets/cat-2.jpg'
+import GridThree from '@/assets/cat-3.jpg'
+import GridFour from '@/assets/cat-4.jpg'
+import CourseOne from '@/assets/course-1.jpg'
+import CourseTwo from '@/assets/course-2.jpg'
+import CourseThree from '@/assets/course-3.jpg'
+import InstructorOne from '@/assets/team-1.jpg'
+import InstructorTwo from '@/assets/team-2.jpg'
+import InstructorThree from '@/assets/team-3.jpg'
+import InstructorFour from '@/assets/team-4.jpg'
+
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 
 
@@ -27,8 +27,8 @@ export default function Home() {
     const navigation = useNavigate();
 
     const [activeIndex, setActiveIndex] = useState(0);
-    const carouselRef = useRef(null);
-    const studentsRef = useRef(null);
+    const carouselRef = useRef<any>(null);
+    const studentsRef = useRef<any>(null);
 
 
 
@@ -44,7 +44,7 @@ export default function Home() {
         }
     };
 
-    const handleOnChange = (index, change = false) => {
+    const handleOnChange = (index: number, change = false) => {
         setActiveIndex(index);
         if (change) studentsRef.current.moveTo(index)
     };
@@ -200,8 +200,8 @@ export default function Home() {
                     </div>
                     <h2 className="text-3xl font-bold mb-3">Welcome to VirtualTech</h2>
 
-                    <p className="text-md text-gray-500 line-clamp-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores sed reiciendis necessitatibus</p>
-                    <p className="text-md text-gray-500 line-clamp-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores sed reiciendis necessitatibus consectetur adipisicing elit. Asperiores sed reiciendis necessitatibus</p>
+                    <p className="text-md text-gray-500 line-clamp-2">Welcome to VirtualTech Academy, the ultimate online learning platform where passionate mentors teach and earn, while students and professionals gain in-demand tech skills at an affordable price.</p>
+                    <p className="text-md text-gray-500 line-clamp-3">We specialize in Artificial Intelligence, Cloud Technologies, Cybersecurity, and more, connecting learners with industry experts who bring real-world insights into every session. Our goal is to make quality tech education accessible, flexible, and budget-friendly, so you can learn anytime, anywhere without breaking the bank.</p>
 
                     <div className="grid grid-cols-2 grid-rows-3 list-none gap-2">
                         <li className="flex items-center gap-2">

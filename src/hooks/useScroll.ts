@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-const useWindow = () => {
+const useWindowScroll = () => {
     const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -14,4 +14,4 @@ const useWindow = () => {
   return scrollY
 }
 
-export default useWindow;
+export default useWindowScroll;

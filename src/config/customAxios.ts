@@ -4,7 +4,7 @@ import { BASE_URL } from "./constants";
 
 export const customAxios = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000, 
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,7 +13,7 @@ export const customAxios = axios.create({
 
 customAxios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

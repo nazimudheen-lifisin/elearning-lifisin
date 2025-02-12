@@ -38,3 +38,7 @@ a {
 .link {
     color: #06BBCC !important;
 }
+
+.custom-link:hover { 
+    color: #06BBCC !important;
+}

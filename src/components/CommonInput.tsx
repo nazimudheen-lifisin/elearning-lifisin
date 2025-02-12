@@ -9,9 +9,9 @@ type Props = {
     required?: boolean
     readOnly?: boolean
     placeholder?: string
-    type: 'number' | 'text' | 'email' | 'password',
+    type?: 'number' | 'text' | 'email' | 'password',
     icon?: React.ReactNode,
-    label: string
+    label?: string
 }
 
 export default function CommonInput({ id, control, name, required, readOnly, placeholder, type = 'text', label }: Props) {
@@ -64,7 +64,7 @@ export default function CommonInput({ id, control, name, required, readOnly, pla
 
                             {
                                 type === 'password' && (
-                                    <div onClick={handlePassword} className="w-8 cursor-pointer my-auto  h-full flex items-center justify-center">
+                                    <div onClick={handlePassword} className="w-6 mr-2 h-6 cursor-pointer my-auto flex items-center justify-center">
                                         {!isPasswordHidden ? (
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray">
                                                 <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />

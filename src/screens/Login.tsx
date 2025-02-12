@@ -3,10 +3,12 @@ import CommonInput from '../components/CommonInput'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCallback, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { loginApi } from '../api/authApi'
+import { User } from '../@types/auth'
+import { toast } from 'react-toastify'
 
 
 
@@ -14,6 +16,7 @@ import { loginApi } from '../api/authApi'
 export default function Login() {
 
     const [forgot, setForgot] = useState(false);
+    const navigate = useNavigate();
 
     const schema = yup.object(!forgot ? {
         username: yup.string().required('Name is required'),
@@ -22,14 +25,19 @@ export default function Login() {
         email: yup.string().email('Type must be email').required('Email is required')
     })
 
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation<User, { message: string }>({
         mutationKey: ['login-api'],
         mutationFn: loginApi,
-        onError() {},
-        onSuccess() {}
+        onError(error) {
+            toast.error(error)
+        },
+        onSuccess() {
+            toast.success("Login successfull")
+            navigate('/home')
+        }
     })
 
-    const { control, reset, handleSubmit } = useForm({
+    const { control, handleSubmit } = useForm({
         resolver: yupResolver(schema)
     })
 
@@ -94,7 +102,7 @@ export default function Login() {
                                 )
                             }
 
-                            <div onClick={handleSubmit(mutate)} className='w-[80%] text-white bg-[#11BECE] mx-auto rounded-4xl mb-auto py-2 flex items-center justify-center'>
+                            <div aria-disabled={isPending} onClick={handleSubmit(mutate)} className='w-[80%] text-white bg-[#11BECE] mx-auto rounded-4xl mb-auto py-2 flex items-center justify-center'>
                                 <p className='font-bold text-center uppercase m-0'>
                                     Submit
                                 </p>
@@ -110,8 +118,8 @@ export default function Login() {
                                     <p onClick={handleForgot} className='font-semibold text-blue-400 cursor-pointer'>Sign up</p>
                                 ) : (
                                     <Link to={'/register'}>
-                                    <p className='font-semibold text-blue-400'>{'Sign up'}</p>
-                                </Link>
+                                        <p className='font-semibold text-blue-400'>{'Sign up'}</p>
+                                    </Link>
                                 )
                             }
                         </div>

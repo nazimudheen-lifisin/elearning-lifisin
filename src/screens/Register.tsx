@@ -3,34 +3,51 @@ import CommonInput from '../components/CommonInput'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import SelectComponent from '../components/SelectComponent'
 import { Link } from 'react-router-dom'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { languagesApi, signApi, skillsApi } from '../api/authApi'
+import { toast } from 'react-toastify'
+import { customAxios } from '../config/customAxios'
 
 
 
-const schema = (type: 'student' | 'mentor') => yup.object({
-    username: yup.string().required('Name is required'),
-    first_name: yup.string().required('First name is required'),
-    last_name: yup.string().required('Last name is required'),
-    email: yup.string().required('Email is required'),
-    password1: yup.string().required('Password is required'),
-    password2: yup.string().required('Confirm password is required'),
-    gender: yup.object().required('Gender is required').typeError('Gender is required'),
-    phone_number: yup.string().required('Phone number is required'),
+const schema = (type: 'student' | 'mentor') => yup.object().shape({
+    user: yup.object({
+        username: yup.string().required('Username is required'),
+        first_name: yup.string().required('First name is required'),
+        last_name: yup.string().required('Last name is required'),
+        email: yup.string().email('Value must be email').required('Email is required'),
+        password: yup.string().required('Password is required'),
+        password2: yup.string().required('Confirm password is required')
+            .oneOf([yup.ref('password'), null], 'Passwords must match'),
+        gender: yup.object().required('Gender is required').typeError('Gender is required'),
+        phone_number: yup.string().required('Phone number is required'),
+        country: yup.string().default("india"),
+    }),
     ...(type === 'mentor' && {
-        education_type: yup.string().required('Eductation type is required'),
-        field_of_study: yup.string().required('Field of study is required'),
-        institution: yup.string().required('Institution is required'),
-        year_of_study: yup.string().required('Year of study is required'),
+        education: yup.object({
+            degree_type: yup.object().required('Eductation type is required'),
+            field_of_study: yup.string().required('Field of study is required'),
+            institution: yup.string().required('Institution is required'),
+            year_of_study: yup.object().required('Year of study is required'),
+        }),
+        cirtifications: yup.object().nullable().default(null),
         linkedin_profile: yup.string().required('Linkedin profile is required'),
         experience_in_years: yup.string().required('Experience years is required'),
         skills: yup.array().required('Skills is required').typeError('Skills is required'),
         languages: yup.array().required('Languages is required').typeError('Languages is required'),
-        availability: yup.string().required('Availability is required'),
+        availability: yup.object().required('Availability is required').typeError('Availability is required'),
+        cover_story: yup.string().nullable().default("")
     })
 })
 
+type YearOption = {
+    id: number;
+    label: string;
+    value: string;
+}
 
 const languages = [
     {
@@ -58,6 +75,30 @@ const skills = [
     }
 ]
 
+
+const years: YearOption[] = [];
+
+for (let year = 2024; year >= 2012; year--) {
+    years.push({
+        id: year,
+        label: year.toString(),
+        value: year.toString(),
+    });
+}
+
+const availability = [
+    {
+        "id": 1,
+        "label": "Flexible",
+        "value": "flexible"
+    },
+    {
+        "id": 2,
+        "label": "Weekends",
+        "value": "weekends"
+    }
+]
+
 const genders = [
     {
         "id": 1,
@@ -71,39 +112,92 @@ const genders = [
     },
     {
         "id": 3,
-        "label": "Transgender",
-        "value": "transgender"
+        "label": "Other",
+        "value": "other"
+    }
+]
+
+const education = [
+    {
+        "id": 1,
+        "label": "Bachelors Degree",
+        "value": "bachelor"
+    },
+    {
+        "id": 2,
+        "label": "Masters Degree",
+        "value": "masters"
+    },
+    {
+        "id": 3,
+        "label": "Doctoral Degree",
+        "value": "doctoral"
     }
 ]
 
 export default function Register() {
 
-    const [activeTab, setActiveTab] = useState("student");
+    const [activeTab, setActiveTab] = useState<"student" | "mentor">("mentor");
 
-    const { control, reset, handleSubmit } = useForm({
+    const { control, reset, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema(activeTab))
     })
+    
+
+    const { data: skillData } = useQuery({
+        queryKey: ['get-skills'],
+        retry: 1,
+        queryFn: async () => customAxios.get('/api/skills')
+    })
+
+    const { data: languageData } = useQuery({
+        queryKey: ['get-languages'],
+        retry: 1,
+        queryFn: languagesApi
+    })
+
+    const { mutate } = useMutation({
+        mutationFn: signApi,
+        mutationKey: ['signin-api'],
+        onSuccess() {
+            toast.success("Register successfully")
+            navigate('/login')
+        },
+        onError() {
+            toast.error("Something went wrong")
+        }
+    })
+
 
     useEffect(() => {
         if (activeTab) {
             reset({
-                username: '',
-                availability: '',
-                first_name: '',
-                languages: [],
-                education_type: '',
-                email: '',
-                experience_in_years: '',
-                field_of_study: '',
-                gender: '',
-                institution: '',
-                last_name: '',
-                linkedin_profile: '',
-                password1: '',
-                password2: '',
-                phone_number: '',
-                skills: [],
-                year_of_study: ''
+                user: {
+                    username: '',
+                    first_name: '',
+                    last_name: '',
+                    email: '',
+                    password: '',
+                    password2: '',
+                    gender: '',
+                    phone_number: '',
+                    country: 'india',
+                },
+                ...(activeTab === 'mentor' && {
+                    education: {
+                        degree_type: '',
+                        field_of_study: '',
+                        institution: '',
+                        year_of_study: '',
+                    },
+                    certifications: null,
+                    linkedin_profile: '',
+                    experience_in_years: '',
+                    skills: [],
+                    languages: [],
+                    availability: {},
+                    cover_story: '',
+                })
             })
         }
     }, [activeTab]);
@@ -119,51 +213,28 @@ export default function Register() {
         })
     }, [])
 
-    const userIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgb(6,187,204)" class="size-6">
-        <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
-    </svg>
 
+    const onSubmit = (data) => {
+        
+        const submitData = {
+            ...data,
+            user: {
+                ...data.user,
+                gender: data.user.gender.value
+            },
+            education: {
+                ...data.education,
+                year_of_study: data.education.year_of_study.value,
+                degree_type: data.education.degree_type.value
+            },
+            availability: data.availability.value,
+            skills: data?.skills?.map(item => item.value),
+            languages: data?.languages?.map(item => item.value)
+        }
 
-    const lockIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgb(6,187,204)" class="size-6">
-        <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clip-rule="evenodd" />
-    </svg>
-
-
-    const gender = <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="9" cy="9" r="4" stroke="#000" stroke-width="1" />
-        <line x1="12" y1="12" x2="16" y2="16" stroke="#000" stroke-width="1" />
-        <line x1="16" y1="12" x2="16" y2="16" stroke="#000" stroke-width="1" />
-        <line x1="16" y1="12" x2="12" y2="12" stroke="#000" stroke-width="1" />
-
-        <circle cx="15" cy="15" r="4" stroke="#000" stroke-width="1" />
-        <line x1="15" y1="19" x2="15" y2="22" stroke="#000" stroke-width="1" />
-        <line x1="13" y1="22" x2="17" y2="22" stroke="#000" stroke-width="1" />
-    </svg>
-
-    const phoneIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgb(6,187,204)" class="size-6">
-        <path fill-rule="evenodd" d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z" clip-rule="evenodd" />
-    </svg>
-
-
-
-    const firstIcon = (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="#000" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="7" r="4" />
-            <rect x="8" y="12" width="8" height="8" />
-        </svg>
-    );
-
-    const lastIcon = (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="#000" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="4" width="18" height="16" rx="2" />
-            <circle cx="8" cy="10" r="3" />
-            <line x1="14" y1="8" x2="18" y2="8" />
-            <line x1="14" y1="12" x2="18" y2="12" />
-        </svg>
-    );
-
-
-    const onSubmit = () => { }
+        console.log(submitData);
+        
+     }
 
 
 
@@ -200,67 +271,63 @@ export default function Register() {
                     <CommonInput
                         placeholder='Username'
                         control={control}
-                        name='username'
+                        name='user.username'
                         id='username'
                         key={'username'}
-                        icon={userIcon}
                     />
+
                     <CommonInput
                         placeholder='First Name'
                         control={control}
-                        name='first_name'
+                        name='user.first_name'
                         id='first_name'
                         key={'first_name'}
-                        icon={firstIcon}
                     />
 
                     <CommonInput
                         placeholder='Last Name'
                         control={control}
-                        name='last_name'
+                        name='user.last_name'
                         id='last_name'
                         key={'last_name'}
-                        icon={lastIcon}
                     />
 
                     <CommonInput
                         placeholder='Email'
                         control={control}
-                        name='email'
+                        name='user.email'
                         id='email'
                         key={'email'}
-                        icon={lockIcon}
                     />
 
                     <CommonInput
                         placeholder='Password'
                         control={control}
-                        name='password1'
-                        id='password1'
-                        key={'password1'}
-                        icon={lockIcon}
+                        name='user.password'
+                        type='password'
+                        id='password'
+                        key={'password'}
                     />
 
                     <CommonInput
                         placeholder='Confirm Password'
                         control={control}
-                        name='password2'
+                        name='user.password2'
+                        type='password'
                         id='password2'
                         key={'password2'}
-                        icon={lockIcon}
                     />
 
                     <CommonInput
                         placeholder='Phone Number'
                         control={control}
-                        name='phone_number'
+                        name='user.phone_number'
                         id='phone_number'
                         key={'phone_number'}
-                        icon={phoneIcon}
                     />
 
                     <SelectComponent
-                        name='gender'
+                        name='user.gender'
                         options={genders}
                         control={control}
                         placeholder='Select gender...'
@@ -273,38 +340,34 @@ export default function Register() {
                             <span className='font-bold text-xl'>Education details</span>
                             <div className="mt-2 w-full grid grid-cols-3 items-center gap-2 mb-6">
 
-                                <CommonInput
-                                    placeholder='Education'
+                                <SelectComponent
+                                    name='education.degree_type'
+                                    options={education}
                                     control={control}
-                                    name='education_type'
-                                    id='education_type'
-                                    key={'education_type'}
-                                    icon={userIcon}
+                                    placeholder='Education type...'
                                 />
+
                                 <CommonInput
-                                    placeholder='Type'
+                                    placeholder='Field of study'
                                     control={control}
-                                    name='field_of_study'
+                                    name='education.field_of_study'
                                     id='field_of_study'
                                     key={'field_of_study'}
-                                    icon={lockIcon}
                                 />
 
                                 <CommonInput
                                     placeholder='Institution'
                                     control={control}
-                                    name='institution'
+                                    name='education.institution'
                                     id='institution'
                                     key={'institution'}
-                                    icon={userIcon}
                                 />
-                                <CommonInput
-                                    placeholder='Year of study'
+
+                                <SelectComponent
+                                    name='education.year_of_study'
+                                    options={years || []}
                                     control={control}
-                                    name='year_of_study'
-                                    id='year_of_study'
-                                    key={'year_of_study'}
-                                    icon={lockIcon}
+                                    placeholder='Year of study...'
                                 />
 
 
@@ -326,7 +389,7 @@ export default function Register() {
                                     key={'name'}
                                     icon={userIcon}
                                 /> */}
-                                
+
                                 <SelectComponent
                                     name='skills'
                                     options={skills}
@@ -350,8 +413,8 @@ export default function Register() {
                                     name='linkedin_profile'
                                     id='linkedin_profile'
                                     key={'linkedin_profile'}
-                                    icon={userIcon}
                                 />
+
                                 <CommonInput
                                     placeholder='Experience'
                                     control={control}
@@ -359,9 +422,22 @@ export default function Register() {
                                     id='experience_in_years'
                                     type='number'
                                     key={'experience_in_years'}
-                                    icon={lockIcon}
                                 />
 
+                                <SelectComponent
+                                    name='availability'
+                                    options={availability}
+                                    control={control}
+                                    placeholder='Select available option...'
+                                />
+
+                                <CommonInput
+                                    placeholder='Cover story (optional)'
+                                    control={control}
+                                    name='cover_story'
+                                    id='cover_story'
+                                    key={'cover_story'}
+                                />
                             </div>
                         </>
                     )

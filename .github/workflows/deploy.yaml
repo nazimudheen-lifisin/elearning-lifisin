@@ -3,7 +3,9 @@ name: Vercel Deployment
 on:
   push:
     branches:
-      - master  # Change to your branch if needed (e.g., 'master', 'production')
+      - master 
+    branches-ignore:
+      - main
 
 jobs:
   deploy:
@@ -22,15 +24,13 @@ jobs:
         run: npm install  # or yarn install, depending on your project
 
       - name: Install Vercel CLI
-        run: |
-          curl -fsSL https://github.com/vercel/vercel/releases/latest/download/vercel-linux-x64.tar.gz | tar -xz -C /usr/local/bin
-        # The command above directly downloads and installs the Vercel CLI on the runner
+        run: npm install --global vercel@canary
 
-      - name: Build project
-        run: npm run build  # or yarn build, depending on your project
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Deploy to Vercel
-        run: |
-          vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --confirm
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}

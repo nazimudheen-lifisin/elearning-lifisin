@@ -156,7 +156,7 @@ C-15,355.3-15,311.2-59.1,311.2z M-177.1,450.3v-98.5l83.8,49.3L-177.1,450.3z"/>
 
                     {/* Gallery Section */}
                     <div>
-                        <h3 className="font-semibold text-lg mb-4">Gallery</h3>
+                        {/* <h3 className="font-semibold text-lg mb-4">Gallery</h3> */}
                         <ul className="grid grid-cols-3 gap-2 p-0">
                             <li className="border-4 border-white">
                                 <img src={CourseOne} className="h-full w-full object-cover" alt="image.png" />

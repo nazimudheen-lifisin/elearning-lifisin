@@ -459,7 +459,7 @@ export default function Register() {
                     <p className='font-normal'>Already have an account </p>
                     &nbsp;
                     <Link to='/'>
-                        <p className='font-semibold text-blue-400'>Sign up</p>
+                        <p className='font-semibold text-blue-400'>Sign in</p>
                     </Link>
                 </div>
             </div>

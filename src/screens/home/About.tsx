@@ -1,8 +1,9 @@
 import React from 'react'
+import Container from '../../components/Container'
 
 function About() {
     return (
-        <div>
+        <Container>
             Best Online Courses
             Get Educated Online From Your Home
             At VirtualTech Academy, we make quality tech education accessible to everyone! Our platform connects passionate mentors with students and professionals eager to learn Artificial Intelligence, Cloud Technologies, Cybersecurity, and more—all at a comparatively lower price.
@@ -30,7 +31,7 @@ function About() {
                     Enroll Now
                 </div>
             </div>
-        </div>
+        </Container>
     )
 }
 

@@ -21,12 +21,16 @@ jobs:
       - name: Install dependencies
         run: npm install  # or yarn install, depending on your project
 
+      - name: Install Vercel CLI
+        run: |
+          curl -fsSL https://github.com/vercel/vercel/releases/latest/download/vercel-linux-x64.tar.gz | tar -xz -C /usr/local/bin
+        # The command above directly downloads and installs the Vercel CLI on the runner
+
       - name: Build project
         run: npm run build  # or yarn build, depending on your project
 
       - name: Deploy to Vercel
         run: |
-          curl -sfL https://github.com/vercel/vercel-action/releases/latest/download/install.sh | bash
           vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --confirm
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

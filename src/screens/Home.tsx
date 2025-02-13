@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useCallback, useRef, useState } from "react";
+import { act, useCallback, useRef, useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 
 import CarouselOne from '@/assets/carousel-1.jpg'
@@ -20,6 +20,9 @@ import InstructorFour from '@/assets/team-4.jpg'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 
+import data from '@/data/home.json'
+
+
 
 export default function Home() {
 
@@ -27,6 +30,8 @@ export default function Home() {
     const navigation = useNavigate();
 
     const [activeIndex, setActiveIndex] = useState(0);
+    const [readMore, setReadMore] = useState(false)
+
     const carouselRef = useRef<any>(null);
     const studentsRef = useRef<any>(null);
 
@@ -38,16 +43,15 @@ export default function Home() {
 
 
     const handleNext = () => {
-        console.log(carouselRef.current)
         if (carouselRef.current) {
             carouselRef.current.onClickNext();
         }
     };
 
-    const handleOnChange = (index: number, change = false) => {
-        setActiveIndex(index);
+    const handleOnChange = useCallback((index: number, change = false) => {
+        console.log(index)
         if (change) studentsRef.current.moveTo(index)
-    };
+    }, []);
 
     const handlePrev = () => {
         if (carouselRef.current) {
@@ -123,7 +127,7 @@ export default function Home() {
                     emulateTouch={true}
                     showArrows={false}
                     swipeable={true}
-                    onChange={handleOnChange}
+                    // onChange={handleOnChange}
                     stopOnHover={true}
                     dynamicHeight={true}
                     interval={2500}
@@ -132,42 +136,51 @@ export default function Home() {
                     className="w-full bg-gray-800"
                 >
                     {
-                        ["the best online platform learning", 'get educated online from your home']?.map((item, i) => (
-                            <div className={`h-[100vh] w-full`} id="animated-div">
-                                <img src={i == 0 ? CarouselOne : CarouselTwo} className="h-full object-cover" alt="Slide 1" />
+                        data?.map((item, i) => {
+                            console.log({ item });
 
-                                <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col mx-auto justify-center">
-                                    <div className="flex pl-[10%] w-5/8 justify-between">
-                                        <div className="flex-3 flex flex-col items-start">
-                                            <p className={`font-semibold text-[#06BBCC] uppercase text-xl`}>Best online courses</p>
-                                            <p className="text-white text-left text-5xl font-extrabold capitalize">{item}</p>
 
-                                            <span className="text-start text-white font-semibold text-xl">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam ut doloribus laboriosam quidem similique,</span>
-                                            <div className="flex gap-3 mt-4">
-                                                <button className="py-3 px-8 text-[9px] bg-[#06BBCC] font-bold text-white">
-                                                    Read more
-                                                </button>
-                                                <button onClick={navToLogin} className="py-3 px-8 text-[9px] bg-[#fff] font-bold">
-                                                    Join now
-                                                </button>
+                            return (
+                                <div className={`h-[100vh] w-full`} id="animated-div">
+                                    <img src={i == 0 ? CarouselOne : CarouselTwo} className="h-full object-cover" alt="Slide 1" />
+
+                                    <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col mx-auto justify-center">
+                                        <div className="flex pl-[10%] w-5/8 justify-between">
+                                            <div className="flex-3 flex flex-col items-start">
+                                                <p className={`font-semibold text-[#06BBCC] uppercase text-xl mb-2 p-0`}>{item?.headline}</p>
+
+                                                {item?.sub_headline && <p className={`m-0 p-0 text-gray-200 text-lg mb-2 uppercase font-bold`}>{item?.sub_headline}</p>}
+
+                                                <span className="text-start text-white font-semibold text-lg">
+                                                    {item?.sub_content}
+                                                </span>
+
+                                                <div className="flex gap-3 mt-4">
+                                                    <button className="py-3 px-8 text-[9px] bg-[#06BBCC] font-bold text-white">
+                                                        Read more
+                                                    </button>
+                                                    <button onClick={navToLogin} className="py-3 px-8 text-[9px] bg-[#fff] font-bold">
+                                                        Join now
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))
+                            )
+                        })
                     }
 
                 </Carousel>
 
                 <div className="absolute top-[59%] right-[12%] flex flex-col z-30 items-end justify-center">
-                    <button onClick={handleNext} className="p-2 border-2 border-gray-200 text-gray-200 hover:bg-[#06BBCC] transition hover:border-[#06BBCC] mb-2">
+                    <button onClick={handlePrev} className="p-2 border-2 border-gray-200 text-gray-200 hover:bg-[#06BBCC] transition hover:border-[#06BBCC] mb-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                         </svg>
                     </button>
 
-                    <button onClick={handlePrev} className="p-2 border-2 border-gray-200 hover:bg-[#06BBCC] transition hover:border-[#06BBCC] text-gray-200">
+                    <button onClick={handleNext} className="p-2 border-2 border-gray-200 hover:bg-[#06BBCC] transition hover:border-[#06BBCC] text-gray-200">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                         </svg>

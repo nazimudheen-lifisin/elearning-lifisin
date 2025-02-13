@@ -3,7 +3,7 @@ import CommonInput from '../components/CommonInput'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, usehistory } from 'react-router-dom'
 import { useCallback, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { loginApi } from '../api/authApi'
@@ -25,15 +25,17 @@ export default function Login() {
         email: yup.string().email('Type must be email').required('Email is required')
     })
 
-    const { mutate, isPending } = useMutation<User, { message: string }>({
+    const { mutate, isPending } = useMutation<User, { error: string }>({
         mutationKey: ['login-api'],
         mutationFn: loginApi,
         onError(error) {
-            toast.error(error?.message)
+            toast.error(error)
         },
-        onSuccess() {
+        onSuccess(data) {
+            localStorage.setItem('token', data?.data?.access)
+
             toast.success("Login successfull")
-            navigate('/home')
+            navigate('/', { replace: true })
         }
     })
 

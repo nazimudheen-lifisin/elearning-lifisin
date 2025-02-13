@@ -31,7 +31,7 @@ customAxios.interceptors.response.use(
     if (error.response?.status === 401) {
       
     }
-    return Promise.reject(error);
+    return Promise.reject(error.response.data.error);
   }
 );
 

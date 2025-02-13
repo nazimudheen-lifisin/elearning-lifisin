@@ -18,6 +18,7 @@ interface Props {
 
 function SelectComponent({ name, options, control, multi = false, placeholder, defaultValue, isFocused, onFocus, onBlur }: Props) {
 
+
   return (
     <div>
       <Controller

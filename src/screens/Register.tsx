@@ -5,7 +5,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useEffect, useMemo, useState } from 'react'
 import SelectComponent from '../components/SelectComponent'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { languagesApi, signApi, skillsApi } from '../api/authApi'
 import { toast } from 'react-toastify'
@@ -121,7 +121,7 @@ const education = [
     {
         "id": 1,
         "label": "Bachelors Degree",
-        "value": "bachelor"
+        "value": "bachelors"
     },
     {
         "id": 2,
@@ -138,22 +138,22 @@ const education = [
 export default function Register() {
 
     const [activeTab, setActiveTab] = useState<"student" | "mentor">("mentor");
+    const navigate = useNavigate();
 
     const { control, reset, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema(activeTab))
     })
-    
+
 
     const { data: skillData } = useQuery({
         queryKey: ['get-skills'],
-        retry: 1,
-        queryFn: async () => customAxios.get('/api/skills')
+        queryFn: async () => customAxios.get('/api/skills'),
+
     })
 
     const { data: languageData } = useQuery({
         queryKey: ['get-languages'],
-        retry: 1,
-        queryFn: languagesApi
+        queryFn: languagesApi,
     })
 
     const { mutate } = useMutation({
@@ -208,33 +208,35 @@ export default function Register() {
             languages: [{
                 "id": 1,
                 "label": "English",
-                "value": "en-US"
+                "value": "EN"
             }]
         })
     }, [])
 
 
     const onSubmit = (data) => {
-        
+
         const submitData = {
             ...data,
             user: {
                 ...data.user,
-                gender: data.user.gender.value
+                gender: data.user.gender.value,
+                user_type: activeTab,
+                experience_in_years: parseInt(data.user.experience_in_years)
             },
-            education: {
+            education: [{
                 ...data.education,
                 year_of_study: data.education.year_of_study.value,
                 degree_type: data.education.degree_type.value
-            },
+            }],
             availability: data.availability.value,
-            skills: data?.skills?.map(item => item.value),
-            languages: data?.languages?.map(item => item.value)
+            skills: data?.skills?.map(item => item.id),
+            languages: data?.languages?.map(item => item.id)
         }
 
-        console.log(submitData);
+        mutate(submitData);
         
-     }
+    }
 
 
 
@@ -269,14 +271,6 @@ export default function Register() {
                 <div className="w-full grid grid-cols-3 items-center gap-2">
 
                     <CommonInput
-                        placeholder='Username'
-                        control={control}
-                        name='user.username'
-                        id='username'
-                        key={'username'}
-                    />
-
-                    <CommonInput
                         placeholder='First Name'
                         control={control}
                         name='user.first_name'
@@ -290,6 +284,14 @@ export default function Register() {
                         name='user.last_name'
                         id='last_name'
                         key={'last_name'}
+                    />
+
+                    <CommonInput
+                        placeholder='Username'
+                        control={control}
+                        name='user.username'
+                        id='username'
+                        key={'username'}
                     />
 
                     <CommonInput
@@ -392,20 +394,24 @@ export default function Register() {
 
                                 <SelectComponent
                                     name='skills'
-                                    options={skills}
+                                    options={skillData?.data?.map(item => ({ ...item, label: item?.name, value: item?.slug }))}
                                     multi
                                     control={control}
                                     placeholder='Select skills...'
                                 />
 
-                                <SelectComponent
-                                    name='languages'
-                                    options={languages}
-                                    control={control}
-                                    multi
-                                    placeholder='Select languages...'
-                                    defaultValue={{ label: 'English', 'value': 'en-US' }}
-                                />
+                                {
+                                    languageData?.data && (
+                                        <SelectComponent
+                                            name='languages'
+                                            options={languageData?.data?.map(item => ({ ...item, label: item?.name, value: item?.code }))}
+                                            control={control}
+                                            multi
+                                            placeholder='Select languages...'
+                                            defaultValue={{ label: 'English', value: 'EN' }}
+                                        />
+                                    )
+                                }
 
                                 <CommonInput
                                     placeholder='Linkedin profile'

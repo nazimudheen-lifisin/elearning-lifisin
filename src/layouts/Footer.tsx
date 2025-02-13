@@ -1,6 +1,6 @@
-import CourseOne from '@/assets/course-1.jpg'
-import CourseTwo from '@/assets/course-2.jpg'
-import useWindowScroll from "@/hooks/useScroll"
+import CourseOne from '@assets/course-1.jpg'
+import CourseTwo from '@assets/course-2.jpg'
+import useWindowScroll from "@hooks/useScroll"
 import { Link } from 'react-router-dom'
 
 function Footer() {

@@ -1,26 +1,26 @@
 import { useNavigate } from "react-router-dom";
-import { act, useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 
-import CarouselOne from '@/assets/carousel-1.jpg'
-import AboutImg from '@/assets/about.jpg'
-import CarouselTwo from '@/assets/carousel-2.jpg'
-import GridOne from '@/assets/cat-1.jpg'
-import GridTwo from '@/assets/cat-2.jpg'
-import GridThree from '@/assets/cat-3.jpg'
-import GridFour from '@/assets/cat-4.jpg'
-import CourseOne from '@/assets/course-1.jpg'
-import CourseTwo from '@/assets/course-2.jpg'
-import CourseThree from '@/assets/course-3.jpg'
-import InstructorOne from '@/assets/team-1.jpg'
-import InstructorTwo from '@/assets/team-2.jpg'
-import InstructorThree from '@/assets/team-3.jpg'
-import InstructorFour from '@/assets/team-4.jpg'
+import CarouselOne from '@assets/carousel-1.jpg'
+import AboutImg from '@assets/about.jpg'
+import CarouselTwo from '@assets/carousel-2.jpg'
+import GridOne from '@assets/cat-1.jpg'
+import GridTwo from '@assets/cat-2.jpg'
+import GridThree from '@assets/cat-3.jpg'
+import GridFour from '@assets/cat-4.jpg'
+import CourseOne from '@assets/course-1.jpg'
+import CourseTwo from '@assets/course-2.jpg'
+import CourseThree from '@assets/course-3.jpg'
+import InstructorOne from '@assets/team-1.jpg'
+import InstructorTwo from '@assets/team-2.jpg'
+import InstructorThree from '@assets/team-3.jpg'
+import InstructorFour from '@assets/team-4.jpg'
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 
-import data from '@/data/home.json'
+import data from '@data/home.json'
 
 
 

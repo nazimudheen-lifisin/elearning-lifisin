@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "target": "ES2022",
-    "lib": ["ES2023"],
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -11,7 +12,8 @@
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": true,  // Keep true if you're not compiling this to JS directly
+    "noEmit": true,
+    "jsx": "react-jsx",
 
     /* Linting */
     "strict": true,
@@ -20,11 +22,45 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    /* Path Aliases */
-    "baseUrl": ".",  // Set base directory to the project root
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]  // Alias @ to refer to src
-    }
+      "@/*": [
+        "src/*"
+      ],
+      "@components": [
+        "src/components"
+      ],
+      "@hooks": [
+        "src/hooks"
+      ],
+      "@utils": [
+        "src/utils"
+      ],
+      "@screens": [
+        "src/screens"
+      ],
+      "@services": [
+        "src/services"
+      ],
+      "@types": [
+        "src/types"
+      ],
+      "@assets": [
+        "src/assets"
+      ],
+      "@config": [
+        "src/config"
+      ],
+      "@data": [
+        "src/data"
+      ],
+      "@layouts": [
+        "src/layouts"
+      ],
+      "@redux": [
+        "src/redux"
+      ],
+    },
   },
-  "include": ["vite.config.ts"]
+  "include": ["src", "src/ProtectedRoute.tsx"]
 }

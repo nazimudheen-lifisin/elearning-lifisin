@@ -1,15 +1,15 @@
-import student from '../assets/student.png.png'
-import CommonInput from '../components/CommonInput'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+import { useMutation } from '@tanstack/react-query'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Link, useNavigate, usehistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCallback, useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
-import { loginApi } from '../api/authApi'
-import { User } from '../@types/auth'
-import { toast } from 'react-toastify'
-import React from 'react'
+
+import { loginApi } from '@services/userServices'
+import student from '@assets/student.png.png'
+import CommonInput from '@components/CommonInput'
+import { User } from '@types/auth'
 
 
 
@@ -26,11 +26,11 @@ export default function Login() {
         email: yup.string().email('Type must be email').required('Email is required')
     })
 
-    const { mutate, isPending } = useMutation<User, { error: string }>({
+    const { mutate, isPending } = useMutation<User, { error: string }, { username: string, password: string}, unknown>({
         mutationKey: ['login-api'],
         mutationFn: loginApi,
         onError(error) {
-            toast.error(error)
+            toast.error(error?.error)
         },
         onSuccess(data) {
             localStorage.setItem('token', data?.data?.access)

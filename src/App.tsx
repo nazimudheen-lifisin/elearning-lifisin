@@ -4,16 +4,16 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 
-import Register from '@/screens/Register';
-import Login from '@/screens/Login';
-import Home from '@/screens/Home'
-import Profile from '@/screens/Profile';
-import MainLayout from '@/layouts/MainLayout';
+import Register from '@screens/auth/Register';
+import Login from '@screens/auth/Login';
+import Home from '@screens/Home'
+import Profile from '@screens/Profile';
+import MainLayout from '@layouts/MainLayout';
+import About from '@screens/Home/About';
+import ProtectedRoute from './ProtectedRoute';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import About from './screens/home/About';
-import checkRedirection from './components/checkRedirection';
 
 
 const queryClient = new QueryClient()
@@ -26,7 +26,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route path='/' element={checkRedirection(MainLayout)}>
+        <Route path='/' element={<ProtectedRoute component={MainLayout} />}>
           <Route index element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route path="/profile" element={<Profile />} />

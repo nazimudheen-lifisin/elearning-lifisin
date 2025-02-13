@@ -9,10 +9,23 @@ export default defineConfig({
   server: {
     host: true,
     port: 4000,
+    open: true,
+    cors: false
   },
+
   resolve: {
     alias: {
-      '@': '/src'
+      '@components': '/src/components',
+      '@hooks': '/src/hooks',
+      '@utils': '/src/utils',
+      '@screens': '/src/screens',
+      '@services': '/src/services',
+      '@types': '/src/types',
+      '@assets': '/src/assets',
+      '@config': '/src/config',
+      '@data': '/src/data',
+      '@layouts': '/src/layouts',
+      '@redux': '/src/redux',
     }
   },
   build: {

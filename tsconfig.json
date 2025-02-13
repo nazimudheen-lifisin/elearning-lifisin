@@ -13,7 +13,18 @@
     "paths": {
       "@/*": [
         "src/*"
-      ]
+      ],
+      "@components": ["src/components"],
+      "@hooks": ["src/hooks"],
+      "@utils": ["src/utils"],
+      "@screens": ["src/screens"],
+      "@services": ["src/services"],
+      "@types": ["src/types"],
+      "@assets": ["src/assets"],
+      "@config": ["src/config"],
+      "@data": ["src/data"],
+      "@layouts": ["src/layouts"],
+      "@redux": ["src/redux"],
     },
   },
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import badge from '../assets/badge.png'
-import rate from '../assets/rate.png'
+import badge from '@assets/badge.png'
+import rate from '@assets/rate.png'
 // import { Message } from '../assets/svg'
 
 function Profile() {

@@ -1,15 +1,17 @@
-import student from '../assets/student.png.png'
-import CommonInput from '../components/CommonInput'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useEffect, useMemo, useState } from 'react'
-import SelectComponent from '../components/SelectComponent'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { languagesApi, signApi, skillsApi } from '../api/authApi'
 import { toast } from 'react-toastify'
-import { customAxios } from '../config/customAxios'
+
+import CommonInput from '@components/CommonInput'
+import SelectComponent from '@components/SelectComponent'
+import { languagesApi, signApi, skillsApi } from '@services/userServices'
+import type { LanguageResponse, SkillsResponse } from '@types/auth'
+import data from '@data/register.json'
+import { MentorFields, UserFields } from '../../@types/auth'
 
 
 
@@ -49,33 +51,6 @@ type YearOption = {
     value: string;
 }
 
-const languages = [
-    {
-        "id": 1,
-        "label": "English",
-        "value": "en-US"
-    },
-    {
-        "id": 2,
-        "label": "Spanish",
-        "value": "es-ES"
-    }
-]
-
-const skills = [
-    {
-        "id": 1,
-        "label": "Data Science",
-        "value": "data-science"
-    },
-    {
-        "id": 2,
-        "label": "Web Development",
-        "value": "web-development"
-    }
-]
-
-
 const years: YearOption[] = [];
 
 for (let year = 2024; year >= 2012; year--) {
@@ -86,85 +61,36 @@ for (let year = 2024; year >= 2012; year--) {
     });
 }
 
-const availability = [
-    {
-        "id": 1,
-        "label": "Flexible",
-        "value": "flexible"
-    },
-    {
-        "id": 2,
-        "label": "Weekends",
-        "value": "weekends"
-    }
-]
-
-const genders = [
-    {
-        "id": 1,
-        "label": "Male",
-        "value": "male"
-    },
-    {
-        "id": 2,
-        "label": "Female",
-        "value": "female"
-    },
-    {
-        "id": 3,
-        "label": "Other",
-        "value": "other"
-    }
-]
-
-const education = [
-    {
-        "id": 1,
-        "label": "Bachelors Degree",
-        "value": "bachelors"
-    },
-    {
-        "id": 2,
-        "label": "Masters Degree",
-        "value": "masters"
-    },
-    {
-        "id": 3,
-        "label": "Doctoral Degree",
-        "value": "doctoral"
-    }
-]
 
 export default function Register() {
 
     const [activeTab, setActiveTab] = useState<"student" | "mentor">("mentor");
     const navigate = useNavigate();
 
-    const { control, reset, handleSubmit, formState: { errors } } = useForm({
+    const { control, reset, handleSubmit } = useForm({
         resolver: yupResolver(schema(activeTab))
     })
 
 
-    const { data: skillData } = useQuery({
+    const { data: skillData } = useQuery<SkillsResponse>({
         queryKey: ['get-skills'],
-        queryFn: async () => customAxios.get('/api/skills'),
-
+        queryFn: skillsApi,
     })
 
-    const { data: languageData } = useQuery({
+    const { data: languageData } = useQuery<LanguageResponse>({
         queryKey: ['get-languages'],
         queryFn: languagesApi,
     })
 
-    const { mutate } = useMutation({
+    const { mutate } = useMutation<any>({
         mutationFn: signApi,
         mutationKey: ['signin-api'],
         onSuccess() {
             toast.success("Register successfully")
             navigate('/login')
         },
-        onError() {
-            toast.error("Something went wrong")
+        onError(error) {
+            toast.error(error?.message)
         }
     })
 
@@ -173,48 +99,19 @@ export default function Register() {
         if (activeTab) {
             reset({
                 user: {
-                    username: '',
-                    first_name: '',
-                    last_name: '',
-                    email: '',
-                    password: '',
-                    password2: '',
-                    gender: '',
-                    phone_number: '',
                     country: 'india',
                 },
-                ...(activeTab === 'mentor' && {
-                    education: {
-                        degree_type: '',
-                        field_of_study: '',
-                        institution: '',
-                        year_of_study: '',
-                    },
-                    certifications: null,
-                    linkedin_profile: '',
-                    experience_in_years: '',
-                    skills: [],
-                    languages: [],
-                    availability: {},
-                    cover_story: '',
-                })
+                languages: [{
+                    "id": 1,
+                    "label": "English",
+                    "value": "EN"
+                }]
             })
         }
     }, [activeTab]);
 
 
-    useEffect(() => {
-        reset({
-            languages: [{
-                "id": 1,
-                "label": "English",
-                "value": "EN"
-            }]
-        })
-    }, [])
-
-
-    const onSubmit = (data) => {
+    const onSubmit: SubmitHandler<UserFields & MentorFields> = (data) => {
 
         const submitData = {
             ...data,
@@ -222,20 +119,20 @@ export default function Register() {
                 ...data.user,
                 gender: data.user.gender.value,
                 user_type: activeTab,
-                experience_in_years: parseInt(data.user.experience_in_years)
             },
             education: [{
                 ...data.education,
                 year_of_study: data.education.year_of_study.value,
                 degree_type: data.education.degree_type.value
             }],
-            availability: data.availability.value,
-            skills: data?.skills?.map(item => item.id),
-            languages: data?.languages?.map(item => item.id)
+            availability: data.availability?.value,
+            skills: data?.skills?.map((item: SkillsResponse) => item.id),
+            languages: data?.languages?.map((item: LanguageResponse) => item.id),
+            experience_in_years: parseInt(data.experience_in_years)
         }
 
         mutate(submitData);
-        
+
     }
 
 
@@ -330,7 +227,7 @@ export default function Register() {
 
                     <SelectComponent
                         name='user.gender'
-                        options={genders}
+                        options={data?.genders}
                         control={control}
                         placeholder='Select gender...'
                     />
@@ -344,7 +241,7 @@ export default function Register() {
 
                                 <SelectComponent
                                     name='education.degree_type'
-                                    options={education}
+                                    options={data?.education}
                                     control={control}
                                     placeholder='Education type...'
                                 />
@@ -394,7 +291,7 @@ export default function Register() {
 
                                 <SelectComponent
                                     name='skills'
-                                    options={skillData?.data?.map(item => ({ ...item, label: item?.name, value: item?.slug }))}
+                                    options={skillData?.data?.map((item: SkillsResponse) => ({ ...item, label: item?.name, value: item?.slug }))}
                                     multi
                                     control={control}
                                     placeholder='Select skills...'
@@ -404,7 +301,7 @@ export default function Register() {
                                     languageData?.data && (
                                         <SelectComponent
                                             name='languages'
-                                            options={languageData?.data?.map(item => ({ ...item, label: item?.name, value: item?.code }))}
+                                            options={languageData?.data?.map((item: LanguageResponse) => ({ ...item, label: item?.name, value: item?.code }))}
                                             control={control}
                                             multi
                                             placeholder='Select languages...'
@@ -432,7 +329,7 @@ export default function Register() {
 
                                 <SelectComponent
                                     name='availability'
-                                    options={availability}
+                                    options={data?.availability}
                                     control={control}
                                     placeholder='Select available option...'
                                 />

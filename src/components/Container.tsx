@@ -1,10 +1,7 @@
-import React from 'react'
+import ChildrenProps from '@types/ChildrenProps'
 
-interface Props {
-    children: React.ReactNode
-}
 
-function Container({ children }: Props) {
+function Container({ children }: ChildrenProps) {
   return (
     <div className='px-14 py-10'>
         {children}

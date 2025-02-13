@@ -1,0 +1,48 @@
+{
+    "availability": [
+        {
+            "id": 1,
+            "label": "Flexible",
+            "value": "flexible"
+        },
+        {
+            "id": 2,
+            "label": "Weekends",
+            "value": "weekends"
+        }
+    ],
+    "genders": [
+        {
+            "id": 1,
+            "label": "Male",
+            "value": "male"
+        },
+        {
+            "id": 2,
+            "label": "Female",
+            "value": "female"
+        },
+        {
+            "id": 3,
+            "label": "Other",
+            "value": "other"
+        }
+    ],
+    "education": [
+        {
+            "id": 1,
+            "label": "Bachelors Degree",
+            "value": "bachelors"
+        },
+        {
+            "id": 2,
+            "label": "Masters Degree",
+            "value": "masters"
+        },
+        {
+            "id": 3,
+            "label": "Doctoral Degree",
+            "value": "doctoral"
+        }
+    ]
+}

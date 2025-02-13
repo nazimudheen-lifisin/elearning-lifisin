@@ -2,23 +2,64 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
-    "lib": ["ES2023"],
+    "lib": [
+      "ES2023"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
-
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@components": [
+        "src/components"
+      ],
+      "@hooks": [
+        "src/hooks"
+      ],
+      "@utils": [
+        "src/utils"
+      ],
+      "@screens": [
+        "src/screens"
+      ],
+      "@services": [
+        "src/services"
+      ],
+      "@types": [
+        "src/types"
+      ],
+      "@assets": [
+        "src/assets"
+      ],
+      "@config": [
+        "src/config"
+      ],
+      "@data": [
+        "src/data"
+      ],
+      "@layouts": [
+        "src/layouts"
+      ],
+      "@redux": [
+        "src/redux"
+      ],
+    },
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "vite.config.ts"
+  ]
 }

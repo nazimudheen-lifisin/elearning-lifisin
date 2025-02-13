@@ -2,8 +2,8 @@
 import { motion } from "framer-motion";
 import { useCallback, useState } from "react";
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import Logo from '../assets/image.jpeg'
-import { navLinks, pagesDropdown } from "../config/routes";
+import Logo from '@assets/image.jpeg'
+import { navLinks, pagesDropdown } from "@config/routes";
 import '../index.css'
 
 

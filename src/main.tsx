@@ -22,7 +22,6 @@ createRoot(document.getElementById('root')!).render(
       closeOnClick
       rtl={false}
       pauseOnFocusLoss
-      draggable
       pauseOnHover
     />
   </BrowserRouter>

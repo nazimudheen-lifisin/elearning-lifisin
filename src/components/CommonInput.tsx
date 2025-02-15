@@ -17,11 +17,21 @@ type Props = {
 export default function CommonInput({ id, control, name, required, readOnly, placeholder, type = 'text', label }: Props) {
 
     const [isPasswordHidden, setIsPasswordHidden] = useState(true);
+    const [isFocus, setIsFocus] = useState(false);
 
 
     const handlePassword = useCallback(function () {
         setIsPasswordHidden(!isPasswordHidden)
-    }, [isPasswordHidden])
+    }, [isPasswordHidden]);
+
+
+    const onFocus = useCallback(() => {
+        setIsFocus(true)
+    }, [])
+
+    const onBlur = useCallback(() => {
+        setIsFocus(!true)
+    }, [])
 
     return (
         <div className="w-full">
@@ -37,7 +47,7 @@ export default function CommonInput({ id, control, name, required, readOnly, pla
             <Controller
                 control={control}
                 name={name}
-                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
 
                     <>
                         <div className={`flex border-[#EDEEF0] ${error ? 'border-red-300' : 'mb-9'} bg-[#fff] h-full border-2`}>
@@ -56,8 +66,9 @@ export default function CommonInput({ id, control, name, required, readOnly, pla
                                 placeholder={placeholder}
                                 value={value}
                                 readOnly={readOnly}
-                                className={`w-full  flex-4 p-[4px] focus:outline-none rounded-4xl px-2.5 ${readOnly ? "bg-[#CDDCED]  px-2" : ""} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                                className={`w-full  flex-4 p-[4px] ${isFocus && 'shadow-[rgb(119, 212, 196)] shadow-lg'} focus:outline-none rounded-4xl px-2.5 ${readOnly ? "bg-[#CDDCED]  px-2" : ""} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                                 aria-invalid={error ? true : false}
+                                onFocus={onFocus}
                                 onChange={onChange}
                                 onBlur={onBlur}
                             />

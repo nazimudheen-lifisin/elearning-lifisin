@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import CommonInput from '@components/CommonInput'
 import SelectComponent from '@components/SelectComponent'
 import { languagesApi, signApi, skillsApi } from '@services/userServices'
-import type { LanguageResponse, SkillsResponse } from '@types/auth'
+import type { ListResponse } from '@types/auth'
 import data from '@data/register.json'
 import { MentorFields, UserFields } from '../../@types/auth'
 
@@ -72,12 +72,13 @@ export default function Register() {
     })
 
 
-    const { data: skillData } = useQuery<SkillsResponse>({
+    const { data: skillData } = useQuery<ListResponse>({
         queryKey: ['get-skills'],
         queryFn: skillsApi,
     })
 
-    const { data: languageData } = useQuery<LanguageResponse>({
+
+    const { data: languageData } = useQuery<ListResponse>({
         queryKey: ['get-languages'],
         queryFn: languagesApi,
     })
@@ -102,9 +103,8 @@ export default function Register() {
                     country: 'india',
                 },
                 languages: [{
-                    "id": 1,
+                    "value": "67b0d587d408f11781e4326c",
                     "label": "English",
-                    "value": "EN"
                 }]
             })
         }
@@ -126,8 +126,8 @@ export default function Register() {
                 degree_type: data.education.degree_type.value
             }],
             availability: data.availability?.value,
-            skills: data?.skills?.map((item: SkillsResponse) => item.id),
-            languages: data?.languages?.map((item: LanguageResponse) => item.id),
+            skills: data?.skills?.map((item: ListResponse) => item.id),
+            languages: data?.languages?.map((item: ListResponse) => item.id),
             experience_in_years: parseInt(data.experience_in_years)
         }
 
@@ -135,6 +135,8 @@ export default function Register() {
 
     }
 
+
+    const optionFun = useCallback((item: ListResponse) => ({ ...item, label: item?.name, value: item?.code }), [])
 
 
     return (
@@ -291,24 +293,20 @@ export default function Register() {
 
                                 <SelectComponent
                                     name='skills'
-                                    options={skillData?.data?.map((item: SkillsResponse) => ({ ...item, label: item?.name, value: item?.slug }))}
+                                    options={skillData?.map(optionFun)}
                                     multi
                                     control={control}
                                     placeholder='Select skills...'
                                 />
 
-                                {
-                                    languageData?.data && (
-                                        <SelectComponent
-                                            name='languages'
-                                            options={languageData?.data?.map((item: LanguageResponse) => ({ ...item, label: item?.name, value: item?.code }))}
-                                            control={control}
-                                            multi
-                                            placeholder='Select languages...'
-                                            defaultValue={{ label: 'English', value: 'EN' }}
-                                        />
-                                    )
-                                }
+                                <SelectComponent
+                                    name='languages'
+                                    options={languageData?.map(optionFun)}
+                                    control={control}
+                                    multi
+                                    placeholder='Select languages...'
+                                    defaultValue={{label: languageData?.[0]?.name, value: languageData?.[0]?._id }}
+                                />
 
                                 <CommonInput
                                     placeholder='Linkedin profile'

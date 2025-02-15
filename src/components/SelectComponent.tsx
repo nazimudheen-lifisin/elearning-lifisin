@@ -35,6 +35,7 @@ function SelectComponent({ name, options, control, multi = false, placeholder, d
               onChange={onChange}
               isMulti={multi}
               className={`${error?.message ? 'border-red-300' : 'mb-9'}`}
+              components={{ ClearIndicator: () => null }}
               styles={{
                 control: base => ({
                   ...base,

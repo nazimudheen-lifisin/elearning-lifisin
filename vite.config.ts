@@ -12,7 +12,6 @@ export default defineConfig({
     open: true,
     cors: false
   },
-
   resolve: {
     alias: {
       '@components': '/src/components',

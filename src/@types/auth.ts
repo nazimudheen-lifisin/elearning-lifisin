@@ -19,15 +19,9 @@ interface User {
     }
 }
 
-type SkillsResponse = {
-    name: string,
-    slug: string,
-    id: number
-}[]
 
-interface LanguageResponse {
-    code: string,
-    id: number,
+interface ListResponse {
+    _id: string,
     name: string
 }
 
@@ -46,8 +40,8 @@ type MentorFields = {
     cirtifications: object | null;
     linkedin_profile: string;
     experience_in_years: string;
-    skills: Omit<SkillsResponse, "code" | "name"> & SelectType [];
-    languages: Record<keyof SelectType, string> & { id: number}[];
+    skills: ListResponse[];
+    languages: ListResponse[];
     availability: SelectType;
     cover_story: string;
 };
@@ -72,4 +66,4 @@ interface LoginData {
 }
 
 
-export type { User, SkillsResponse, LanguageResponse, MentorFields, UserFields, LoginData }
+export type { User, ListResponse, MentorFields, UserFields, LoginData }

@@ -20,7 +20,7 @@ import InstructorFour from '@assets/team-4.jpg'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 
-import data from '@data/home.json'
+import data from '@/data/home.json'
 
 
 

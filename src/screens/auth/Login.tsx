@@ -6,10 +6,10 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCallback, useState } from 'react'
 
-import { loginApi } from '@services/userServices'
-import student from '@assets/student.png.png'
-import CommonInput from '@components/CommonInput'
-import { User } from '@types/auth'
+import { loginApi } from '@/services/userServices'
+import student from '@/assets/student.png.png'
+import CommonInput from '@/components/CommonInput'
+import { User } from '@/types/auth'
 
 
 
@@ -26,7 +26,7 @@ export default function Login() {
         email: yup.string().email('Type must be email').required('Email is required')
     })
 
-    const { mutate, isPending } = useMutation<User, { error: string }, { username: string, password: string}, unknown>({
+    const { mutate, isPending } = useMutation<User, { error: string }, { username: string, password: string }, unknown>({
         mutationKey: ['login-api'],
         mutationFn: loginApi,
         onError(error) {
@@ -100,7 +100,9 @@ export default function Login() {
                                             key={'password'}
                                         />
 
-                                        <p onClick={handleForgot} className='font-bold text-right w-full mb-4 cursor-pointer'>Forgot Password?</p>
+                                        <div className="cursor-pointer">
+                                            <p onClick={handleForgot} className='font-bold text-right w-full mb-4'>Forgot Password?</p>
+                                        </div>
                                     </>
                                 )
                             }
@@ -118,7 +120,9 @@ export default function Login() {
                             &nbsp;
                             {
                                 forgot ? (
-                                    <p onClick={handleForgot} className='font-semibold text-blue-400 cursor-pointer'>Sign up</p>
+                                    <div className="cursor-pointer">
+                                        <p onClick={handleForgot} className='font-semibold text-blue-400'>Sign in</p>
+                                    </div>
                                 ) : (
                                     <Link to={'/register'}>
                                         <p className='font-semibold text-blue-400'>{'Sign up'}</p>

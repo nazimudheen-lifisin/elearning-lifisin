@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios"
 
-import { customAxios } from "@config/customAxios"
-import { LoginData, MentorFields, SkillsResponse, User, UserFields } from "@types/auth"
+import { customAxios } from "@/config/customAxios"
+import { LoginData, MentorFields, User, ListResponse, UserFields } from "@/types/auth"
 
 
 
@@ -16,7 +16,7 @@ export const signApi = async (data: MentorFields & UserFields) => {
 }
 
 export const skillsApi = async () => {
-    const response: AxiosResponse<SkillsResponse> = await customAxios.get('/api/skills');
+    const response: AxiosResponse<ListResponse> = await customAxios.get('/api/skills');
     return response;
 }
 

@@ -1,7 +1,7 @@
-import { useCallback, useState } from "react"
+import React, { useCallback, useState } from "react"
 
-export default function withFocusChecker(WrappedComponent) {
-    return function (props) {
+export default function withFocusChecker(WrappedComponent: React.FC) {
+    return function (props: React.ComponentProps<any>) {
         const [focus, setFocus] = useState(false);
 
         const handleFocus = useCallback(() => {

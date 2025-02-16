@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import badge from '@assets/badge.png'
 import rate from '@assets/rate.png'
+import ChildrenProps from '@/types/ChildrenProps'
 // import { Message } from '../assets/svg'
 
 function Profile() {
@@ -65,7 +66,7 @@ const Tab = ({ onClick, isActive, children }) => (
   </li>
 )
 
-const Tabs = ({ children }) => {
+const Tabs = ({ children }: ChildrenProps) => {
   const [activeTab, setActiveTab] = useState(0)
 
   return (

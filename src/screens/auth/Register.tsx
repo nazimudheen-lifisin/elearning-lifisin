@@ -6,12 +6,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 
-import CommonInput from '@components/CommonInput'
-import SelectComponent from '@components/SelectComponent'
-import { languagesApi, signApi, skillsApi } from '@services/userServices'
-import type { ListResponse } from '@types/auth'
-import data from '@data/register.json'
-import { MentorFields, UserFields } from '../../@types/auth'
+import CommonInput from '@/components/CommonInput'
+import SelectComponent from '@/components/SelectComponent'
+import { languagesApi, signApi, skillsApi } from '@/services/userServices'
+import type { ListResponse } from '@/types/auth'
+import data from '@/data/register.json'
+import { MentorFields, UserFields } from '@/types/auth'
+import CommonButton from '@/components/CommonButton'
 
 
 
@@ -36,8 +37,8 @@ const schema = (type: 'student' | 'mentor') => yup.object().shape({
             year_of_study: yup.object().required('Year of study is required'),
         }),
         cirtifications: yup.object().nullable().default(null),
-        linkedin_profile: yup.string().required('Linkedin profile is required'),
-        experience_in_years: yup.string().required('Experience years is required'),
+        linkedin_profile: yup.string().url('Invalid linkedin profile').required('Linkedin profile is required'),
+        experience_in_years: yup.string().matches(/^\d*$/, 'Only numbers allowd').required('Experience years is required'),
         skills: yup.array().required('Skills is required').typeError('Skills is required'),
         languages: yup.array().required('Languages is required').typeError('Languages is required'),
         availability: yup.object().required('Availability is required').typeError('Availability is required'),
@@ -224,6 +225,7 @@ export default function Register() {
                         control={control}
                         name='user.phone_number'
                         id='phone_number'
+                        type='number'
                         key={'phone_number'}
                     />
 
@@ -344,11 +346,7 @@ export default function Register() {
                     )
                 }
 
-                <div onClick={handleSubmit(onSubmit)} className='lg:w-[50%] transition-transform mt-6 transform hover:scale-105 text-white bg-[#11BECE] mx-auto rounded-4xl mb-auto py-2 flex items-center justify-center'>
-                    <p className='font-bold text-center uppercase m-0'>
-                        Submit
-                    </p>
-                </div>
+                <CommonButton label={'Submit'} onClick={() => handleSubmit(mutate)} />
 
                 <div className='mt-4 w-full  flex justify-center items-center'>
                     <p className='font-normal'>Already have an account </p>

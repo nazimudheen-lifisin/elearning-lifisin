@@ -27,10 +27,10 @@ customAxios.interceptors.request.use(
 
 
 customAxios.interceptors.response.use(
-  (response: AxiosResponse) => response?.data,
+  (response: AxiosResponse) => response.data,
   async (error: AxiosError<{ error: string }>) => {
     if (error.response?.status === 401) {
-        console.log('kdkdk')  
+      window.location.replace('/login')
     }
 
     return Promise.reject(error.response?.data?.error || error?.message);

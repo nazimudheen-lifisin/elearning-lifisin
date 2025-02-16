@@ -1,5 +1,6 @@
 import { Control, Controller, FieldValues } from "react-hook-form";
 import Select, { SingleValue } from 'react-select'
+
 import withFocusChecker from "./withFocusChecker";
 
 
@@ -17,7 +18,6 @@ interface Props {
 
 
 function SelectComponent({ name, options, control, multi = false, placeholder, defaultValue, isFocused, onFocus, onBlur }: Props) {
-
 
   return (
     <div>
@@ -39,9 +39,8 @@ function SelectComponent({ name, options, control, multi = false, placeholder, d
               styles={{
                 control: base => ({
                   ...base,
-                  borderColor: isFocused ? '#11bece' : '#edeef0',
-                  borderWidth: 2,
-                  boxShadow: 'red',
+                  boxShadow: isFocused ? "0 0 7px 1px rgba(130, 235, 237)" : "none",
+                  borderColor: isFocused ? "rgb(130, 235, 237)" : '#5555',
                   ...(error && {
                     borderColor: '#FFA2A2',
                     marginTop: -9

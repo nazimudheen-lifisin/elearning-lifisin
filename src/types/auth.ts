@@ -11,6 +11,7 @@ interface User {
             "user_type": string,
             "country": string,
             "gender": string
+            "profile_picture": string
         },
         "linkedin_profile": string,
         "experience_in_years": number,
@@ -37,7 +38,12 @@ type MentorFields = {
         institution: string;
         year_of_study: SelectType;
     };
-    cirtifications: object | null;
+    cirtifications: {
+        cirt_name: string,
+        cirt_org: string,
+        cirt_id: string,
+        cirt_file: string
+    }[];
     linkedin_profile: string;
     experience_in_years: string;
     skills: ListResponse[];

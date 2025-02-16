@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
@@ -13,6 +13,7 @@ import type { ListResponse } from '@/types/auth'
 import data from '@/data/register.json'
 import { MentorFields, UserFields } from '@/types/auth'
 import CommonButton from '@/components/CommonButton'
+import CommonModal from '@/components/CommonModal'
 
 
 
@@ -28,6 +29,7 @@ const schema = (type: 'student' | 'mentor') => yup.object().shape({
         gender: yup.object().required('Gender is required').typeError('Gender is required'),
         phone_number: yup.string().required('Phone number is required'),
         country: yup.string().default("india"),
+        profile_picture: yup.mixed().nullable()
     }),
     ...(type === 'mentor' && {
         education: yup.object({
@@ -36,14 +38,20 @@ const schema = (type: 'student' | 'mentor') => yup.object().shape({
             institution: yup.string().required('Institution is required'),
             year_of_study: yup.object().required('Year of study is required'),
         }),
-        cirtifications: yup.object().nullable().default(null),
         linkedin_profile: yup.string().url('Invalid linkedin profile').required('Linkedin profile is required'),
         experience_in_years: yup.string().matches(/^\d*$/, 'Only numbers allowd').required('Experience years is required'),
-        skills: yup.array().required('Skills is required').typeError('Skills is required'),
-        languages: yup.array().required('Languages is required').typeError('Languages is required'),
+        skills: yup.array().required('Skills is required').typeError('Skills is required').min(1, 'Skills is required'),
+        languages: yup.array().required('Languages is required').typeError('Languages is required').min(1, 'Languages is required'),
         availability: yup.object().required('Availability is required').typeError('Availability is required'),
-        cover_story: yup.string().nullable().default("")
+        cover_story: yup.string().nullable().default(""),
     })
+})
+
+const cirtificateSchema = yup.object({
+    cirt_name: yup.string().required('Name is required'),
+    cirt_org: yup.string().required('Organization is required'),
+    cirt_id: yup.string().required('Certification ID / License Number is required'),
+    cirt_file: yup.string().required('Cirtification file is required')
 })
 
 type YearOption = {
@@ -62,14 +70,28 @@ for (let year = 2024; year >= 2012; year--) {
     });
 }
 
+const showError = () => {
+    window.alert('You must add at least one certificate')
+}
+
 
 export default function Register() {
 
+    const [showModal, setShowModal] = useState<boolean>(false)
+    const [cirtifications, setCirtifications] = useState([])
     const [activeTab, setActiveTab] = useState<"student" | "mentor">("mentor");
     const navigate = useNavigate();
 
-    const { control, reset, handleSubmit } = useForm({
-        resolver: yupResolver(schema(activeTab))
+
+    const handleModal = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+        e?.stopPropagation();
+        e?.preventDefault();
+
+        setShowModal(!showModal)
+    }, [showModal])
+
+    const { control, reset, handleSubmit, getValues, setValue } = useForm({
+        resolver: yupResolver(showModal ? cirtificateSchema : schema(activeTab))
     })
 
 
@@ -112,7 +134,24 @@ export default function Register() {
     }, [activeTab]);
 
 
+    const handleCirtificate = useCallback(async (data) => {
+        // reset({})
+        
+        await Promise.resolve(console.log(data))
+
+        setValue('cirt_file', '')
+        setValue('cirt_org', '')
+        setValue('cirt_name', '')
+        setValue('cirt_id', '')
+
+        setShowModal(false);
+    }, [showModal])
+
+    console.log({ cirtifications });
+    
     const onSubmit: SubmitHandler<UserFields & MentorFields> = (data) => {
+
+        if(cirtifications?.length === 0) return showError()
 
         const submitData = {
             ...data,
@@ -136,8 +175,7 @@ export default function Register() {
 
     }
 
-
-    const optionFun = useCallback((item: ListResponse) => ({ ...item, label: item?.name, value: item?.code }), [])
+    const optionFun = useCallback((item: ListResponse) => ({ label: item?.name, value: item?._id }), [])
 
 
     return (
@@ -167,7 +205,10 @@ export default function Register() {
 
                 </div>
 
-                <span className='font-bold text-xl'>Personal details</span>
+                <div className="flex w-full items-center justify-between mb-3 bg-gray-50 py-2 px-2">
+                    <span className='font-bold text-xl'>Personal details</span>
+                </div>
+
                 <div className="w-full grid grid-cols-3 items-center gap-2">
 
                     <CommonInput
@@ -235,12 +276,24 @@ export default function Register() {
                         control={control}
                         placeholder='Select gender...'
                     />
+
+                    <CommonInput
+                        placeholder='Profile Picture'
+                        control={control}
+                        type='file'
+                        name='user.profile_picture'
+                        id='profile_picture'
+                        key={'profile_picture'}
+                    />
+
                 </div>
 
                 {
                     activeTab === 'mentor' && (
                         <>
-                            <span className='font-bold text-xl'>Education details</span>
+                            <div className="flex w-full items-center justify-between mb-3 bg-gray-50 py-2 px-2">
+                                <span className='font-bold text-xl'>Education details</span>
+                            </div>
                             <div className="mt-2 w-full grid grid-cols-3 items-center gap-2 mb-6">
 
                                 <SelectComponent
@@ -281,7 +334,10 @@ export default function Register() {
                     </div> */}
                             </div>
 
-                            <span className='font-bold text-xl'>Professional details</span>
+                            <div className="flex w-full items-center justify-between mb-3 bg-gray-50 py-2 px-2">
+                                <span className='font-bold text-xl'>Professional details</span>
+                            </div>
+
                             <div className="mt-2 w-full grid grid-cols-3 items-center gap-2 mb-6">
 
                                 {/* <CommonInput
@@ -307,7 +363,7 @@ export default function Register() {
                                     control={control}
                                     multi
                                     placeholder='Select languages...'
-                                    defaultValue={{label: languageData?.[0]?.name, value: languageData?.[0]?._id }}
+                                    defaultValue={{ label: languageData?.[0]?.name, value: languageData?.[0]?._id }}
                                 />
 
                                 <CommonInput
@@ -342,11 +398,57 @@ export default function Register() {
                                     key={'cover_story'}
                                 />
                             </div>
+
+                            <div className="flex w-full items-center justify-between mb-16 bg-gray-50 py-2 px-2">
+                                <span className='font-bold text-xl'>Cirtificates</span>
+
+                                <CommonButton label='Add cirtificate' style='lg:w-[15%] capitalize text-xs' onClick={handleModal} />
+                            </div>
+
+                            {
+                                showModal && (
+                                    <CommonModal title='Add cirtificate' onClose={handleModal} onSubmit={handleSubmit(handleCirtificate)}>
+
+                                        <CommonInput
+                                            placeholder='Cirtification Name'
+                                            control={control}
+                                            name={`cirt_name`}
+                                            id='cirt_name'
+                                            key={'cirt_name'}
+                                        />
+
+                                        <CommonInput
+                                            placeholder='Organization'
+                                            control={control}
+                                            name={`cirt_org`}
+                                            id='cirt_org'
+                                            key={'cirt_org'}
+                                        />
+
+                                        <CommonInput
+                                            placeholder='Cirtification ID / Licence No'
+                                            control={control}
+                                            name={`cirt_id`}
+                                            id='cirt_id'
+                                            key={'cirt_id'}
+                                        />
+
+                                        <CommonInput
+                                            control={control}
+                                            name={`cirt_file`}
+                                            type='file'
+                                            id='cirt_file'
+                                            key={'cirt_file'}
+                                        />
+
+                                    </CommonModal>
+                                )
+                            }
                         </>
                     )
                 }
 
-                <CommonButton label={'Submit'} onClick={() => handleSubmit(mutate)} />
+                <CommonButton label={'Submit'} onClick={handleSubmit(onSubmit)} />
 
                 <div className='mt-4 w-full  flex justify-center items-center'>
                     <p className='font-normal'>Already have an account </p>

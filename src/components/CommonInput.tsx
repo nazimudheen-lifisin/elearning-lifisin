@@ -10,15 +10,16 @@ type Props = {
     required?: boolean
     readOnly?: boolean
     placeholder?: string
-    type?: 'number' | 'text' | 'email' | 'password',
+    type?: 'number' | 'text' | 'email' | 'password' | 'file',
     icon?: React.ReactNode,
     label?: string,
+    defaultValue?: string,
     isFocused: boolean,
     onFocus: () => void,
     onBlur: () => void
 }
 
-const CommonInput = function ({ id, control, name, required, readOnly, placeholder, type = 'text', label, isFocused, onBlur, onFocus }: Props) {
+const CommonInput = function ({ id, control, name, required, readOnly, placeholder, type = 'text', label, isFocused, onBlur, onFocus, defaultValue }: Props) {
 
     const [isPasswordHidden, setIsPasswordHidden] = useState(true);
 
@@ -58,10 +59,11 @@ const CommonInput = function ({ id, control, name, required, readOnly, placehold
 
                             <input
                                 id={id}
-                                type={type ? type && type === 'password' && isPasswordHidden ? 'password' : type : type}
+                                type={type ? type === 'password' && isPasswordHidden ? 'password' : type === 'password' && !isPasswordHidden ? 'text' : type : type}
+                                accept={type === 'file' ? '.jpg, .jpeg, .png' : ''}
                                 required={required}
                                 placeholder={placeholder}
-                                value={value}
+                                value={defaultValue ?? value}
                                 readOnly={readOnly}
                                 className={`w-full  flex-4 p-[4px] focus:outline-none  px-2.5 ${readOnly ? "bg-[#CDDCED]  px-2" : ""} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                                 aria-invalid={error ? true : false}

@@ -1,4 +1,4 @@
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -17,42 +17,47 @@ import CommonModal from '@/components/CommonModal'
 
 
 
-const schema = (type: 'student' | 'mentor') => yup.object().shape({
-    user: yup.object({
-        username: yup.string().required('Username is required'),
-        first_name: yup.string().required('First name is required'),
-        last_name: yup.string().required('Last name is required'),
-        email: yup.string().email('Value must be email').required('Email is required'),
-        password: yup.string().required('Password is required'),
-        password2: yup.string().required('Confirm password is required')
-            .oneOf([yup.ref('password'), null], 'Passwords must match'),
-        gender: yup.object().required('Gender is required').typeError('Gender is required'),
-        phone_number: yup.string().required('Phone number is required'),
-        country: yup.string().default("india"),
-        profile_picture: yup.mixed().nullable()
-    }),
-    ...(type === 'mentor' && {
-        education: yup.object({
-            degree_type: yup.object().required('Eductation type is required'),
-            field_of_study: yup.string().required('Field of study is required'),
-            institution: yup.string().required('Institution is required'),
-            year_of_study: yup.object().required('Year of study is required'),
-        }),
-        linkedin_profile: yup.string().url('Invalid linkedin profile').required('Linkedin profile is required'),
-        experience_in_years: yup.string().matches(/^\d*$/, 'Only numbers allowd').required('Experience years is required'),
-        skills: yup.array().required('Skills is required').typeError('Skills is required').min(1, 'Skills is required'),
-        languages: yup.array().required('Languages is required').typeError('Languages is required').min(1, 'Languages is required'),
-        availability: yup.object().required('Availability is required').typeError('Availability is required'),
-        cover_story: yup.string().nullable().default(""),
-    })
-})
+const schema = (type: 'student' | 'mentor' | 'cirt') => yup.object().shape(
+    type === 'cirt' ? {
+        cirtifications: {
+            cirt_name: yup.string().required('Name is required'),
+            cirt_org: yup.string().required('Organization is required'),
+            cirt_id: yup.string().required('Certification ID / License Number is required'),
+            cirt_file: yup.string().required('Cirtification file is required')
+        }
+    } :
+        {
+            user: yup.object({
+                username: yup.string().required('Username is required'),
+                first_name: yup.string().required('First name is required'),
+                last_name: yup.string().required('Last name is required'),
+                email: yup.string().email('Value must be email').required('Email is required'),
+                password: yup.string().required('Password is required'),
+                password2: yup.string().required('Confirm password is required')
+                    .oneOf([yup.ref('password'), null], 'Passwords must match'),
+                gender: yup.object().required('Gender is required').typeError('Gender is required'),
+                phone_number: yup.string().required('Phone number is required'),
+                country: yup.string().default("india"),
+                profile_picture: yup.mixed().nullable()
+            }),
+            ...(type === 'mentor' && {
+                education: yup.object({
+                    degree_type: yup.object().required('Eductation type is required'),
+                    field_of_study: yup.string().required('Field of study is required'),
+                    institution: yup.string().required('Institution is required'),
+                    year_of_study: yup.object().required('Year of study is required'),
+                    file: yup.object().nullable()
+                }),
+                cirtifications: yup.mixed().default(null),
+                linkedin_profile: yup.string().url('Invalid linkedin profile').required('Linkedin profile is required'),
+                experience_in_years: yup.string().matches(/^\d*$/, 'Only numbers allowd').required('Experience years is required'),
+                skills: yup.array().required('Skills is required').typeError('Skills is required').min(1, 'Skills is required'),
+                languages: yup.array().required('Languages is required').typeError('Languages is required').min(1, 'Languages is required'),
+                availability: yup.object().required('Availability is required').typeError('Availability is required'),
+                cover_story: yup.string().nullable().default(""),
+            })
+        })
 
-const cirtificateSchema = yup.object({
-    cirt_name: yup.string().required('Name is required'),
-    cirt_org: yup.string().required('Organization is required'),
-    cirt_id: yup.string().required('Certification ID / License Number is required'),
-    cirt_file: yup.string().required('Cirtification file is required')
-})
 
 type YearOption = {
     id: number;
@@ -75,12 +80,15 @@ const showError = () => {
 }
 
 
+
 export default function Register() {
 
     const [showModal, setShowModal] = useState<boolean>(false)
     const [cirtifications, setCirtifications] = useState([])
+    const [profile, setProfile] = useState<null | {}>(null);
     const [activeTab, setActiveTab] = useState<"student" | "mentor">("mentor");
     const navigate = useNavigate();
+
 
 
     const handleModal = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -90,10 +98,14 @@ export default function Register() {
         setShowModal(!showModal)
     }, [showModal])
 
-    const { control, reset, handleSubmit, getValues, setValue } = useForm({
-        resolver: yupResolver(showModal ? cirtificateSchema : schema(activeTab))
+    const { control, reset, handleSubmit, getValues, setValue, formState: { errors } } = useForm({
+        resolver: yupResolver(schema(showModal ? 'cirt' : activeTab))
     })
 
+
+    const handleOnchange = (e) => {
+        setProfile(e.target.files?.[0])
+    }
 
     const { data: skillData } = useQuery<ListResponse>({
         queryKey: ['get-skills'],
@@ -105,6 +117,7 @@ export default function Register() {
         queryKey: ['get-languages'],
         queryFn: languagesApi,
     })
+
 
     const { mutate } = useMutation<any>({
         mutationFn: signApi,
@@ -120,24 +133,46 @@ export default function Register() {
 
 
     useEffect(() => {
-        if (activeTab) {
-            reset({
-                user: {
-                    country: 'india',
-                },
+        reset({
+            user: {
+                username: '',
+                first_name: '',
+                last_name: '',
+                email: '',
+                password: '',
+                password2: '',
+                gender: null,
+                phone_number: '',
+                country: 'India',
+                profile_picture: ''
+            },
+            ...(activeTab === 'mentor' && {
+                education: yup.object({
+                    degree_type: null,
+                    field_of_study: '',
+                    institution: '',
+                    year_of_study: '',
+                    file: ''
+                }),
+                cirtifications: null,
+                linkedin_profile: '',
+                experience_in_years: '',
+                skills: [],
                 languages: [{
-                    "value": "67b0d587d408f11781e4326c",
-                    "label": "English",
-                }]
+                    value: '67b0d587d408f11781e4326c',
+                    label: 'English'
+                }],
+                availability: '',
+                cover_story: '',
             })
-        }
+        })
     }, [activeTab]);
 
+    console.log({ errors });
 
-    const handleCirtificate = useCallback(async (data) => {
-        // reset({})
-        
-        await Promise.resolve(console.log(data))
+
+
+    const handleCirtificate = useCallback((data) => {
 
         setValue('cirt_file', '')
         setValue('cirt_org', '')
@@ -147,33 +182,49 @@ export default function Register() {
         setShowModal(false);
     }, [showModal])
 
-    console.log({ cirtifications });
-    
+
     const onSubmit: SubmitHandler<UserFields & MentorFields> = (data) => {
 
-        if(cirtifications?.length === 0) return showError()
+        const formData = new FormData()
 
-        const submitData = {
-            ...data,
-            user: {
-                ...data.user,
-                gender: data.user.gender.value,
-                user_type: activeTab,
-            },
-            education: [{
-                ...data.education,
-                year_of_study: data.education.year_of_study.value,
-                degree_type: data.education.degree_type.value
-            }],
-            availability: data.availability?.value,
-            skills: data?.skills?.map((item: ListResponse) => item.id),
-            languages: data?.languages?.map((item: ListResponse) => item.id),
-            experience_in_years: parseInt(data.experience_in_years)
+        if (profile) {
+            formData.append('profile_picture', profile)
         }
 
-        mutate(submitData);
+        Object.entries(data.user).forEach(([key, value]) => {
+            if (key === 'gender') formData.append(key, data.user.gender.value)
+            else formData.append(key, value)
+        })
+
+        formData.append('role', activeTab);
+
+        if (activeTab === 'mentor') {
+            if (cirtifications?.length === 0) return showError()
+
+            submitData = {
+                ...data,
+                user: {
+                    ...data.user,
+                    gender: data.user.gender.value,
+                    role: activeTab,
+                },
+                education: [{
+                    ...data.education,
+                    year_of_study: data.education.year_of_study.value,
+                    degree_type: data.education.degree_type.value
+                }],
+                availability: data.availability?.value,
+                skills: data?.skills?.map((item: ListResponse) => item.id),
+                languages: data?.languages?.map((item: ListResponse) => item.id),
+                experience_in_years: parseInt(data.experience_in_years)
+            }
+
+        }
+
+        mutate(formData);
 
     }
+
 
     const optionFun = useCallback((item: ListResponse) => ({ label: item?.name, value: item?._id }), [])
 
@@ -255,7 +306,7 @@ export default function Register() {
                     <CommonInput
                         placeholder='Confirm Password'
                         control={control}
-                        name='user.password2'
+                        name='user.password2' reset
                         type='password'
                         id='password2'
                         key={'password2'}
@@ -281,6 +332,7 @@ export default function Register() {
                         placeholder='Profile Picture'
                         control={control}
                         type='file'
+                        customOnChange={handleOnchange}
                         name='user.profile_picture'
                         id='profile_picture'
                         key={'profile_picture'}
@@ -326,6 +378,15 @@ export default function Register() {
                                     placeholder='Year of study...'
                                 />
 
+
+                                <CommonInput
+                                    placeholder='Education file'
+                                    control={control}
+                                    name='education.file'
+                                    type='file'
+                                    id='file'
+                                    key={'file'}
+                                />
 
                                 {/* <div className='w-[80%] bg-[#11BECE] mx-auto rounded-4xl mb-auto py-2 flex items-center justify-center'>
                         <p className='font-bold text-center uppercase m-0'>
@@ -412,7 +473,7 @@ export default function Register() {
                                         <CommonInput
                                             placeholder='Cirtification Name'
                                             control={control}
-                                            name={`cirt_name`}
+                                            name={`cirtifications.cirt_name`}
                                             id='cirt_name'
                                             key={'cirt_name'}
                                         />
@@ -420,7 +481,7 @@ export default function Register() {
                                         <CommonInput
                                             placeholder='Organization'
                                             control={control}
-                                            name={`cirt_org`}
+                                            name={`cirtifications.cirt_org`}
                                             id='cirt_org'
                                             key={'cirt_org'}
                                         />
@@ -428,14 +489,14 @@ export default function Register() {
                                         <CommonInput
                                             placeholder='Cirtification ID / Licence No'
                                             control={control}
-                                            name={`cirt_id`}
+                                            name={`cirtifications.cirt_id`}
                                             id='cirt_id'
                                             key={'cirt_id'}
                                         />
 
                                         <CommonInput
                                             control={control}
-                                            name={`cirt_file`}
+                                            name={`cirtifications.cirt_file`}
                                             type='file'
                                             id='cirt_file'
                                             key={'cirt_file'}

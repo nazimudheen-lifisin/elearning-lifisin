@@ -4,7 +4,7 @@ import { BASE_URL } from "./constants";
 
 export const customAxios = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 1000000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -28,12 +28,13 @@ customAxios.interceptors.request.use(
 
 customAxios.interceptors.response.use(
   (response: AxiosResponse) => response.data,
-  async (error: AxiosError<{ error: string }>) => {
+  async (error: AxiosError<{ message: string }>) => {
+ 
     if (error.response?.status === 401) {
       window.location.replace('/login')
     }
 
-    return Promise.reject(error.response?.data?.error || error?.message);
+    return Promise.reject(error.response?.data?.message || error?.message);
   }
 );
 

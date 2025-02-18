@@ -16,10 +16,11 @@ type Props = {
     defaultValue?: string,
     isFocused: boolean,
     onFocus: () => void,
-    onBlur: () => void
+    onBlur: () => void,
+    customOnChange: () => void
 }
 
-const CommonInput = function ({ id, control, name, required, readOnly, placeholder, type = 'text', label, isFocused, onBlur, onFocus, defaultValue }: Props) {
+const CommonInput = function ({ id, control, customOnChange, name, required, readOnly, placeholder, type = 'text', label, isFocused, onBlur, onFocus, defaultValue }: Props) {
 
     const [isPasswordHidden, setIsPasswordHidden] = useState(true);
 
@@ -63,12 +64,12 @@ const CommonInput = function ({ id, control, name, required, readOnly, placehold
                                 accept={type === 'file' ? '.jpg, .jpeg, .png' : ''}
                                 required={required}
                                 placeholder={placeholder}
-                                value={defaultValue ?? value}
+                                {...(type !== 'file' && { value: defaultValue ?? value })}
                                 readOnly={readOnly}
                                 className={`w-full  flex-4 p-[4px] focus:outline-none  px-2.5 ${readOnly ? "bg-[#CDDCED]  px-2" : ""} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                                 aria-invalid={error ? true : false}
                                 onFocus={onFocus}
-                                onChange={onChange}
+                                onChange={(e) => customOnChange ? customOnChange(e) : onChange(e.target.value)}
                                 onBlur={onBlur}
                             />
 

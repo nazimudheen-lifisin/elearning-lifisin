@@ -29,6 +29,7 @@ export default function Home() {
 
     const navigation = useNavigate();
 
+
     const [activeIndex, setActiveIndex] = useState(0);
     const [readMore, setReadMore] = useState(false)
 
@@ -49,6 +50,8 @@ export default function Home() {
     };
 
     const handleOnChange = useCallback((index: number, change = false) => {
+
+        return
         console.log(index)
         if (change) studentsRef.current.moveTo(index)
     }, []);

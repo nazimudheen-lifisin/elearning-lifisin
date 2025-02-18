@@ -30,7 +30,7 @@ export default function Login() {
         mutationKey: ['login-api'],
         mutationFn: loginApi,
         onError(error) {
-            toast.error(error?.error)
+            toast.error(error)
         },
         onSuccess(data) {
             localStorage.setItem('token', data?.data?.access)

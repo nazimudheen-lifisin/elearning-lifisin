@@ -26,7 +26,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route path='/' element={<ProtectedRoute component={MainLayout} />}>
+        <Route path='/' element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route path="/profile" element={<Profile />} />

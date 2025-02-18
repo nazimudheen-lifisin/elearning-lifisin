@@ -63,6 +63,7 @@ interface UserFields {
         gender: SelectType,
         phone_number: string,
         country: string,
+        profile_picture: any
     }
 }
 
